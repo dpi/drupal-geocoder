@@ -100,6 +100,8 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    *
    * @return \Drupal\geocoder_field\GeocoderFieldPluginInterface|null
    *   The plugin instance or NULL, if no plugin handles this field type.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function getPluginByFieldType($field_type) {
     foreach ($this->getDefinitions() as $definition) {

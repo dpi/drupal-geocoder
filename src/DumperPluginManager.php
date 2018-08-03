@@ -14,6 +14,11 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
  */
 class DumperPluginManager extends GeocoderPluginManagerBase {
 
+  /**
+   * List of fields having a max length.
+   *
+   * @var string[]
+   */
   private $maxLengthFieldTypes = [
     "text",
     "string",

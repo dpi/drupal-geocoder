@@ -34,6 +34,8 @@ abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerB
    *   The cache backend used to cache geocoding data.
    * @param \Http\Client\HttpClient $http_adapter
    *   The HTTP adapter.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend, HttpClient $http_adapter) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend);

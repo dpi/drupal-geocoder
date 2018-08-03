@@ -219,6 +219,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
             ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'source'],
           ],
         ],
+        '#required' => true,
       ];
     }
 
@@ -226,7 +227,6 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     // geofield defined from the entity, extend the Form with Reverse Geocode
     // (from Geofield) capabilities.
     if ($this->moduleHandler->moduleExists('geocoder_geofield') && !empty($reverse_geocode_source_fields_options)) {
-
       // Add the Option to Reverse Geocode.
       $element['method']['#options']['destination'] = $this->t('<b>Reverse Geocode</b> from a Geofield type existing field');
 
@@ -244,6 +244,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         ],
       ];
     }
+
     $element['hidden'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('<strong>Hide</strong> this field in the Content Edit Form'),

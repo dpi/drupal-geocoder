@@ -19,6 +19,8 @@ class File extends AbstractProvider implements Provider {
 
   /**
    * The name of the file that is being geocoded.
+   *
+   * @var string
    */
   protected $filename;
 

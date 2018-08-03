@@ -84,7 +84,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
     $this->stringTranslation = $string_translation;
     $this->renderer = $renderer;
     $this->link = $link_generator;
-    $this->providersLink = $this->link->generate(t('List of all available Geocoder providers'), Url::fromUri('https://packagist.org/providers/geocoder-php/provider-implementation', [
+    $this->providersLink = $this->link->generate(t('list of all available Geocoder providers'), Url::fromUri('https://packagist.org/providers/geocoder-php/provider-implementation', [
       'absolute' => TRUE,
       'attributes' => ['target' => 'blank'],
     ]));
@@ -151,7 +151,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
       'caption' => [
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => $this->t('Select and reorder the Geocoder plugins to use. The first one returning a valid value will be used.<br>If the provider of your choice does not appear here under look in the @providers_link (you might install/add it using Composer).', [
+        '#value' => $this->t('Select and reorder the Geocoder plugins to use. The first one returning a valid value will be used.<br>If the provider of your choice does not appear here under look in the @providers_link (<em>you might install/add it using Composer</em>).', [
           '@providers_link' => $this->providersLink,
         ]),
       ],

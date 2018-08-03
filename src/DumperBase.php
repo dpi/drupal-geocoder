@@ -45,6 +45,7 @@ abstract class DumperBase extends PluginBase implements DumperInterface, Contain
       $class = $definition['handler'];
       $this->handler = new $class();
     }
+
     return $this->handler;
   }
 

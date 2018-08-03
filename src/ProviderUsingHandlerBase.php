@@ -12,7 +12,13 @@ use Geocoder\StatefulGeocoder;
  */
 abstract class ProviderUsingHandlerBase extends ProviderBase {
 
+  /**
+   * The language code.
+   *
+   * @var string
+   */
   protected $langCode;
+
   /**
    * The provider handler.
    *
@@ -34,6 +40,7 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
     if (empty($plugin_definition['handler'])) {
       throw new InvalidPluginDefinitionException($plugin_id, "Plugin '$plugin_id' should define a handler.");
     }
+
     parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend);
   }
 
@@ -41,16 +48,14 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    * {@inheritdoc}
    */
   protected function doGeocode($source) {
-    $geocoder = $this->getHandlerWrapper();
-    return $geocoder->geocode($source);
+    return $this->getHandlerWrapper()->geocode($source);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function doReverse($latitude, $longitude) {
-    $geocoder = $this->getHandlerWrapper();
-    return $geocoder->reverse($latitude, $longitude);
+    return $this->getHandlerWrapper()->reverse($latitude, $longitude);
   }
 
   /**
@@ -58,6 +63,8 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    *
    * @return \Geocoder\Provider\Provider
    *   The provider plugin.
+   *
+   * @throws \ReflectionException
    */
   protected function getHandler() {
     if (!isset($this->handler)) {
@@ -90,6 +97,7 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
       // TODO: need to inject language manager to do this properly.
       $this->langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }
+
     return $this->langCode;
   }
 
@@ -98,11 +106,14 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    *
    * @return \Geocoder\StatefulGeocoder
    *   The current handler wrapped in this class.
+   *
+   * @throws \ReflectionException
    */
   protected function getHandlerWrapper() {
     if (!isset($this->handlerWrapper)) {
       $this->handlerWrapper = new StatefulGeocoder($this->getHandler(), $this->getLangCode());
     }
+
     return $this->handlerWrapper;
   }
 
@@ -114,6 +125,7 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    */
   protected function getArguments() {
     $arguments = [];
+
     foreach ($this->getPluginDefinition()['arguments'] as $key => $argument) {
       // No default value has been passed.
       if (is_string($key)) {
@@ -124,8 +136,12 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
         $config_name = $argument;
         $default_value = NULL;
       }
-      $arguments[] = isset($this->configuration[$config_name]) ? $this->configuration[$config_name] : $default_value;
+
+      $arguments[] = isset($this->configuration[$config_name]) ?
+        $this->configuration[$config_name] :
+        $default_value;
     }
+
     return $arguments;
   }
 

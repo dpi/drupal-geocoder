@@ -38,7 +38,7 @@ class Random extends ProviderBase {
   protected function doGeocode($source) {
     return new AddressCollection(
       [
-        $this->getAddressFactory()->createFromArray($this->getRandomResult())
+        $this->getAddressFactory()->createFromArray($this->getRandomResult()),
       ]
     );
   }
@@ -53,7 +53,7 @@ class Random extends ProviderBase {
 
     return new AddressCollection(
       [
-        $this->getAddressFactory()->createFromArray($result)
+        $this->getAddressFactory()->createFromArray($result),
       ]
     );
   }

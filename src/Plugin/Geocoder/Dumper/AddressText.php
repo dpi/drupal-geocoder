@@ -42,6 +42,8 @@ class AddressText extends DumperBase {
    *   The configuration for the plugin.
    * @param \Drupal\geocoder\FormatterPluginManager $geocoder_formatter_plugin_manager
    *   The geocoder formatter plugin manager service.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function __construct(
     array $configuration,
