@@ -40,7 +40,7 @@ abstract class DumperBase extends PluginBase implements DumperInterface, Contain
    *   Returns dumper handler.
    */
   protected function getHandler() {
-    if (!isset($this->handler)) {
+    if ($this->handler === NULL) {
       $definition = $this->getPluginDefinition();
       $class = $definition['handler'];
       $this->handler = new $class();

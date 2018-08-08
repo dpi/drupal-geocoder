@@ -5,19 +5,14 @@ namespace Drupal\geocoder;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Geocoder\StatefulGeocoder;
+use Geocoder\Provider\Provider;
 
 /**
  * Provides a base class for providers using handlers.
  */
 abstract class ProviderUsingHandlerBase extends ProviderBase {
-
-  /**
-   * The language code.
-   *
-   * @var string
-   */
-  protected $langCode;
 
   /**
    * The provider handler.
@@ -36,12 +31,12 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager) {
     if (empty($plugin_definition['handler'])) {
       throw new InvalidPluginDefinitionException($plugin_id, "Plugin '$plugin_id' should define a handler.");
     }
 
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend, $language_manager);
   }
 
   /**
@@ -66,39 +61,14 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    *
    * @throws \ReflectionException
    */
-  protected function getHandler() {
-    if (!isset($this->handler)) {
+  protected function getHandler(): Provider {
+    if ($this->handler === NULL) {
       $definition = $this->getPluginDefinition();
       $reflection_class = new \ReflectionClass($definition['handler']);
       $this->handler = $reflection_class->newInstanceArgs($this->getArguments());
     }
 
     return $this->handler;
-  }
-
-  /**
-   * Sets the language code to use.
-   *
-   * @param string $langCode
-   *   The language code to use.
-   */
-  public function setLangCode($langCode) {
-    $this->langCode = $langCode;
-  }
-
-  /**
-   * Gets the language code to use with the stateful wrapper.
-   *
-   * @return string
-   *   The language code.  Defaults to current language.
-   */
-  protected function getLangCode() {
-    if (!isset($this->langCode)) {
-      // TODO: need to inject language manager to do this properly.
-      $this->langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    }
-
-    return $this->langCode;
   }
 
   /**
@@ -109,9 +79,12 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    *
    * @throws \ReflectionException
    */
-  protected function getHandlerWrapper() {
-    if (!isset($this->handlerWrapper)) {
-      $this->handlerWrapper = new StatefulGeocoder($this->getHandler(), $this->getLangCode());
+  protected function getHandlerWrapper(): StatefulGeocoder {
+    if ($this->handlerWrapper === NULL) {
+      $this->handlerWrapper = new StatefulGeocoder(
+        $this->getHandler(),
+        $this->languageManager->getCurrentLanguage()->getId()
+      );
     }
 
     return $this->handlerWrapper;
@@ -123,12 +96,12 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    * @return array
    *   The list of arguments for handler instantiation.
    */
-  protected function getArguments() {
+  protected function getArguments(): array {
     $arguments = [];
 
     foreach ($this->getPluginDefinition()['arguments'] as $key => $argument) {
       // No default value has been passed.
-      if (is_string($key)) {
+      if (\is_string($key)) {
         $config_name = $key;
         $default_value = $argument;
       }
@@ -137,9 +110,7 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
         $default_value = NULL;
       }
 
-      $arguments[] = isset($this->configuration[$config_name]) ?
-        $this->configuration[$config_name] :
-        $default_value;
+      $arguments[] = $this->configuration[$config_name] ?? $default_value;
     }
 
     return $arguments;

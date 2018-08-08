@@ -4,6 +4,7 @@ namespace Drupal\geocoder;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\geocoder\Annotation\GeocoderProvider;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -28,13 +29,6 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
   protected $config;
 
   /**
-   * The Renderer service property.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $renderer;
-
-  /**
    * The Link generator Service.
    *
    * @var \Drupal\Core\Utility\LinkGeneratorInterface
@@ -42,11 +36,25 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
   protected $link;
 
   /**
-   * The List of all available Geocoder providers.
+   * The Drupal messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * The list of all available Geocoder providers.
    *
    * @var \Drupal\Core\GeneratedLink
    */
   public $providersLink;
+
+  /**
+   * The Renderer service property.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $renderer;
 
   /**
    * Constructs a new geocoder provider plugin manager.
@@ -66,6 +74,8 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
    *   The renderer.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The Link Generator service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The Drupal messenger service.
    */
   public function __construct(
     \Traversable $namespaces,
@@ -74,7 +84,8 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
     ConfigFactoryInterface $config_factory,
     TranslationInterface $string_translation,
     RendererInterface $renderer,
-    LinkGeneratorInterface $link_generator
+    LinkGeneratorInterface $link_generator,
+    MessengerInterface $messenger
   ) {
     parent::__construct('Plugin/Geocoder/Provider', $namespaces, $module_handler, ProviderInterface::class, GeocoderProvider::class);
     $this->alterInfo('geocoder_provider_info');
@@ -88,6 +99,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
       'absolute' => TRUE,
       'attributes' => ['target' => 'blank'],
     ]));
+    $this->messenger = $messenger;
   }
 
   /**
@@ -96,7 +108,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
    * @return array
    *   A list of plugins with their settings.
    */
-  public function getPlugins() {
+  public function getPlugins(): array {
     $plugins_arguments = (array) $this->config->get('plugins_options');
 
     $definitions = array_map(function (array $definition) use ($plugins_arguments) {
@@ -121,7 +133,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
    * @return array
    *   The plugins table list.
    */
-  public function providersPluginsTableList(array $enabled_plugins) {
+  public function providersPluginsTableList(array $enabled_plugins): array {
     $geocoder_settings_link = $this->link->generate(t('Edit options in the Geocoder configuration page</span>'), Url::fromRoute('geocoder.settings', [], [
       'query' => [
         'destination' => Url::fromRoute('<current>')
@@ -185,7 +197,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
     }
 
     $plugins = array_map(function ($plugin, $weight) use ($enabled_plugins) {
-      $checked = in_array($plugin['id'], $enabled_plugins);
+      $checked = \in_array($plugin['id'], $enabled_plugins, TRUE);
 
       return array_merge($plugin, [
         'checked' => $checked,
@@ -233,26 +245,6 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
     }
 
     return $element['plugins'];
-  }
-
-  /**
-   * Function to lower case keys in a multidimensional array.
-   *
-   * @param array $arr
-   *   The input array.
-   *
-   * @return array
-   *   The return array
-   *
-   * @TODO: This should be removed before the stable release 8.x-2.0.
-   */
-  private function arrayLowerKeyCaseRecursive(array $arr) {
-    return array_map(function ($item) {
-      if (is_array($item)) {
-        $item = $this->arrayLowerKeyCaseRecursive($item);
-      }
-      return $item;
-    }, array_change_key_case($arr));
   }
 
 }

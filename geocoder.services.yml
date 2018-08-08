@@ -11,12 +11,12 @@ services:
   plugin.manager.geocoder.provider:
     class: Drupal\geocoder\ProviderPluginManager
     parent: default_plugin_manager
-    arguments: ['@config.factory', '@string_translation', '@renderer', '@link_generator']
+    arguments: ['@config.factory', '@string_translation', '@renderer', '@link_generator', '@messenger']
 
   plugin.manager.geocoder.dumper:
     class: Drupal\geocoder\DumperPluginManager
     parent: default_plugin_manager
-    arguments: ['@logger.factory']
+    arguments: ['@logger.factory', '@messenger']
 
   plugin.manager.geocoder.formatter:
     class: Drupal\geocoder\FormatterPluginManager
