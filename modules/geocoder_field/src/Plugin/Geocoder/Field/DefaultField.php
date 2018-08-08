@@ -156,7 +156,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#open' => TRUE,
     ];
 
-    // Attach Geofield Map Library.
+    // Attach Geocoder Library.
     $element['#attached']['library'] = [
       'geocoder/general',
     ];
@@ -172,7 +172,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#title' => $this->t('Geocode method'),
       '#options' => [
         'none' => $this->t('No geocoding'),
-        'source' => $this->t('<b>Geocode</b> from an existing field'),
+        'geocode' => $this->t('<b>Geocode</b> from an existing field'),
       ],
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'method', 'none'),
     ];
@@ -188,16 +188,24 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#states' => $invisible_state,
     ];
 
-    // Set a default empty value for geocode_field.
-    $element['geocode_field'] = [
-      '#type' => 'value',
-      '#value' => '',
+    $element['geocode'] = [
+      '#type' => 'container',
+      '#title' => 'geocode',
+      '#states' => [
+        'visible' => [
+          ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'geocode'],
+        ],
+      ],
     ];
 
-    // Set a default empty value for reverse_geocode_field.
-    $element['reverse_geocode_field'] = [
-      '#type' => 'value',
-      '#value' => '',
+    $element['reverse_geocode'] = [
+      '#type' => 'container',
+      '#title' => 'reverse_geocode',
+      '#states' => [
+        'visible' => [
+          ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'reverse_geocode'],
+        ],
+      ],
     ];
 
     // Get the field options for geocode and reverse geocode source fields.
@@ -208,18 +216,13 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     // extend the Form with Geocode Option.
     // (from Geofield) capabilities.
     if (!empty($geocode_source_fields_options)) {
-      $element['geocode_field'] = [
+      $element['geocode']['field'] = [
         '#type' => 'select',
         '#title' => $this->t('Geocode from an existing field'),
-        '#description' => $this->t('Select which field you would like to use as Source Address field.'),
-        '#default_value' => $field->getThirdPartySetting('geocoder_field', 'geocode_field'),
+        '#description' => $this->t('Select which field you would like to use as source address field.'),
+        '#default_value' => $field->getThirdPartySetting('geocoder_field', 'field'),
         '#options' => $geocode_source_fields_options,
-        '#states' => [
-          'visible' => [
-            ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'source'],
-          ],
-        ],
-        '#required' => true,
+        '#required' => TRUE,
       ];
     }
 
@@ -228,20 +231,16 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     // (from Geofield) capabilities.
     if ($this->moduleHandler->moduleExists('geocoder_geofield') && !empty($reverse_geocode_source_fields_options)) {
       // Add the Option to Reverse Geocode.
-      $element['method']['#options']['destination'] = $this->t('<b>Reverse Geocode</b> from a Geofield type existing field');
+      $element['method']['#options']['reverse_geocode'] = $this->t('<b>Reverse Geocode</b> from a Geofield type existing field');
 
       // Add the Element to select the Reverse Geocode field.
-      $element['reverse_geocode_field'] = [
+      $element['reverse_geocode']['field'] = [
         '#type' => 'select',
         '#title' => $this->t('Reverse Geocode from an existing field'),
-        '#description' => $this->t('Select which field you would like to use as Geographic Source field.'),
-        '#default_value' => $field->getThirdPartySetting('geocoder_field', 'reverse_geocode_field'),
+        '#description' => $this->t('Select which field you would like to use as geographic source field.'),
+        '#default_value' => $field->getThirdPartySetting('geocoder_field', 'field'),
         '#options' => $reverse_geocode_source_fields_options,
-        '#states' => [
-          'visible' => [
-            ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'destination'],
-          ],
-        ],
+        '#required' => TRUE,
       ];
     }
 
@@ -257,12 +256,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#title' => $this->t('<strong>Disable</strong> this field in the Content Edit Form'),
       '#description' => $this->t('If checked, the Field will be Disabled to the user in the edit form, </br>and totally managed by the Geocode/Reverse Geocode operation chosen'),
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'disabled'),
-      '#states' => [
-        'invisible' => [
-          [':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'none']],
-          [':input[name="third_party_settings[geocoder_field][hidden]"]' => ['checked' => TRUE]],
-        ],
-      ],
+      '#states' => $invisible_state,
     ];
 
     // Get the enabled/selected plugins.
@@ -280,7 +274,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#description' => $this->t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
       '#states' => $invisible_state,
     ];
-    $element['delta_handling'] = [
+
+    $element['geocode']['delta_handling'] = [
       '#type' => 'select',
       '#title' => $this->t('Multi-value input handling'),
       '#description' => 'If the source field is a multi-value field, this is mapped 1-on-1 by default.
@@ -294,15 +289,17 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
       '#states' => [
         'visible' => [
-          [':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'source']],
+          [':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'geocode']],
         ],
       ],
     ];
+
     $failure = (array) $field->getThirdPartySetting('geocoder_field', 'failure') + [
       'handling' => 'preserve',
       'status_message' => TRUE,
       'log' => TRUE,
     ];
+
     $element['failure']['handling'] = [
       '#type' => 'radios',
       '#title' => $this->t('What to store if geo-coding fails?'),
@@ -314,12 +311,14 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#default_value' => $failure['handling'],
       '#states' => $invisible_state,
     ];
+
     $element['failure']['status_message'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show a status message warning in case of geo-coding failure.'),
       '#default_value' => $failure['status_message'],
       '#states' => $invisible_state,
     ];
+
     $element['failure']['log'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Log the geo-coding failure.'),
@@ -341,10 +340,16 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     }
 
     // On Reverse Geocode the delta_handling should always be 'default'
-    // (many to many), because the other scenario is not admittable.
-    if ($form_values['method'] == 'destination') {
+    // (many to many), because the other scenario is not possible.
+    if ($form_values['method'] === 'reverse_geocode') {
       $form_state->setValue('delta_handling', 'default');
     }
+
+    foreach ($form_values[$form_values['method']] as $key => $value) {
+      $form_state->setValue($key, $value);
+    }
+
+    $form_state->unsetValue($form_values['method']);
   }
 
 }

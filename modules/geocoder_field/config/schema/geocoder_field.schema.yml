@@ -6,16 +6,13 @@ field.field.*.*.*.third_party.geocoder_field:
   mapping:
     method:
       type: string
-      label: 'Geocode method'
+      label: 'Geocode method/action: geocode or reverse_geocode'
     weight:
       type: integer
       label: 'Weight'
-    geocode_field:
+    field:
       type: string
-      label: 'Field to geocode from'
-    reverse_geocode_field:
-      type: string
-      label: 'Field to geocode to'
+      label: 'Field to geocode to or from depending on the "method" in use.'
     hidden:
       type: boolean
       label: 'Hide field'
