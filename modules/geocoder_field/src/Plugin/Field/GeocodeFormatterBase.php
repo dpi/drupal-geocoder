@@ -14,7 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Geocoder\Model\AddressCollection;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Base Plugin implementation of the Geocode formatter.
@@ -65,6 +67,13 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   protected $link;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructs a GeocodeFormatterBase object.
    *
    * @param string $plugin_id
@@ -93,6 +102,8 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    *   The renderer.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The Link Generator service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
   public function __construct(
     $plugin_id,
@@ -107,7 +118,8 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     ProviderPluginManager $provider_plugin_manager,
     DumperPluginManager $dumper_plugin_manager,
     RendererInterface $renderer,
-    LinkGeneratorInterface $link_generator
+    LinkGeneratorInterface $link_generator,
+    LoggerChannelFactoryInterface $logger_factory
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->config = $config_factory->get('geocoder.settings');
@@ -116,6 +128,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $this->dumperPluginManager = $dumper_plugin_manager;
     $this->renderer = $renderer;
     $this->link = $link_generator;
+    $this->loggerFactory = $logger_factory;
   }
 
   /**
@@ -135,7 +148,8 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       $container->get('plugin.manager.geocoder.provider'),
       $container->get('plugin.manager.geocoder.dumper'),
       $container->get('renderer'),
-      $container->get('link_generator')
+      $container->get('link_generator'),
+      $container->get('logger.factory')
     );
   }
 
@@ -216,12 +230,17 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
+    try {
+      $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
+    }
+    catch (PluginException $e) {
+      $this->loggerFactory->get('geocoder')->error('No Dumper has been set');
+    }
     $provider_plugins = $this->getEnabledProviderPlugins();
     $geocoder_plugins_options = (array) $this->config->get('plugins_options');
 
     foreach ($items as $delta => $item) {
-      if ($address_collection = $this->geocoder->geocode($item->value, array_keys($provider_plugins), $geocoder_plugins_options)) {
+      if (isset($dumper) && $address_collection = $this->geocoder->geocode($item->value, array_keys($provider_plugins), $geocoder_plugins_options)) {
         $elements[$delta] = [
           '#markup' => $address_collection instanceof AddressCollection && !$address_collection->isEmpty() ? $dumper->dump($address_collection->first()) : "",
         ];

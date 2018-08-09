@@ -4,6 +4,8 @@ namespace Drupal\geocoder_geofield\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\geocoder_field\Plugin\Field\GeocodeFormatterBase;
+use Geocoder\Model\AddressCollection;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Plugin implementation of the Geocode formatter.
@@ -23,7 +25,12 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
+    try {
+      $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
+    }
+    catch (PluginException $e) {
+      $this->loggerFactory->get('geocoder')->error('No Dumper has been set');
+    }
     $provider_plugins = $this->getEnabledProviderPlugins();
     $geocoder_plugins_options = (array) $this->config->get('plugins_options');
 
@@ -37,7 +44,7 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
       /** @var \Point $centroid */
       $centroid = $geom->getCentroid();
 
-      if ($address_collection = $this->geocoder->reverse($centroid->y(), $centroid->x(), array_keys($provider_plugins), $geocoder_plugins_options)) {
+      if (isset($dumper) && $address_collection = $this->geocoder->reverse($centroid->y(), $centroid->x(), array_keys($provider_plugins), $geocoder_plugins_options)) {
         $elements[$delta] = [
           '#markup' => $address_collection instanceof AddressCollection && !$address_collection->isEmpty() ? $dumper->dump($address_collection->first()) : "",
         ];
