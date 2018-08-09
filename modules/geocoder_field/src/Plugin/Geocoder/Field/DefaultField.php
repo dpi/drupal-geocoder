@@ -222,7 +222,11 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         '#description' => $this->t('Select which field you would like to use as source address field.'),
         '#default_value' => $field->getThirdPartySetting('geocoder_field', 'field'),
         '#options' => $geocode_source_fields_options,
-        '#required' => TRUE,
+        '#states' => [
+          'required' => [
+            ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'geocode'],
+          ],
+        ],
       ];
     }
 
@@ -240,7 +244,11 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         '#description' => $this->t('Select which field you would like to use as geographic source field.'),
         '#default_value' => $field->getThirdPartySetting('geocoder_field', 'field'),
         '#options' => $reverse_geocode_source_fields_options,
-        '#required' => TRUE,
+        '#states' => [
+          'required' => [
+            ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'reverse_geocode'],
+          ],
+        ],
       ];
     }
 
