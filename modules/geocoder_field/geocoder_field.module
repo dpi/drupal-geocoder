@@ -190,7 +190,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
       $dumper = $dumper_manager->createInstance($geocoder['dumper']);
     }
     catch (PluginException $e) {
-      $this->loggerFactory->get('geocoder')->error('No Dumper has been set');
+      \Drupal::logger('geocoder')->error('No Dumper has been set');
     }
     $default_values = $entity->get($field_name);
     $result = [];
