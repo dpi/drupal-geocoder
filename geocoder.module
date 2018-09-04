@@ -109,7 +109,7 @@ function geocoder($handler, $data, $options = array(), $cache_type = 'DEPRECATED
  */
 function geocoder_menu() {
   // Admin settings for the site.
-  $items['admin/config/content/geocoder/geocoder'] = array(
+  $items['admin/config/content/geocoder'] = array(
     'title' => 'Geocoder settings',
     'description' => 'Configuration for API keys and other global settings.',
     'page callback' => 'drupal_get_form',
