@@ -24,9 +24,9 @@ This is a complete rewrite of the Geocoder module, based on the
   dependencies](https://www.drupal.org/node/2718229);
 * [Drush](http://drush.org), to enable the module (and its dependencies) from
   the shell;
-* No other external requirements for the main geocoder Module: the [Geocoder PHP
-  library](http://geocoder-php.org) will be downloaded automatically via
-  composer (see below);
+* The external [Geocoder Provider(s)](https://packagist.org/providers/geocoder-php/provider-implementation) 
+  that should enabled and used in the module. Dependant [willdurand/geocoder](https://packagist.org/packages/willdurand/geocoder) 
+  and (specific provider) additional / required libraries will be downloaded automatically via composer.
 * The embedded "Geocoder Geofield" submodule requires the [Geofield
   Module](https://www.drupal.org/project/geofield);
 * The embedded "Geocoder Address" submodule requires the [Address
