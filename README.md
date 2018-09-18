@@ -90,9 +90,14 @@ $settings['http_client_config']['proxy'];
 ```php
 $plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
+// Array of options
+// Note: At the moment options are not automatically pulled in from the module config
 $options = array(
   'geonames' => array(), // array of options
-  'googlemaps' => array(), // array of options
+  'googlemaps' => array(
+    'apikey' => 'my-api-key',
+    'usessl' => TRUE,
+  ),
   'bingmaps' => array(), // array of options
 );
 
@@ -105,6 +110,8 @@ $addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $
 $plugins = array('freegeoip', 'geonames', 'googlemaps', 'bingmaps');
 $lat = '37.422782';
 $lon = '-122.085099';
+// Array of options
+// Note: At the moment options are not automatically pulled in from the module config.
 $options = array(
   'freegeoip' => array(), // array of options
   'geonames' => array(), // array of options
@@ -154,8 +161,13 @@ Here's an example on how to use a Dumper:
 ```php
 $plugins = array('geonames', 'googlemaps', 'bingmaps'); 
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
+$options = array(
+  'geonames' => array(), // array of options
+  'googlemaps' => array(), // array of options
+  'bingmaps' => array(), // array of options
+);
 
-$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
+$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $options);
 $geojson = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('geojson')->dump($addressCollection->first());
 ```
 
@@ -164,8 +176,13 @@ There's also a dumper for GeoPHP, here's how to use it:
 ```php
 $plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
+$options = array(
+  'geonames' => array(), // array of options
+  'googlemaps' => array(), // array of options
+  'bingmaps' => array(), // array of options
+);
 
-$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
+$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $options);
 $geometry = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('geometry')->dump($addressCollection->first());
 ```
 
