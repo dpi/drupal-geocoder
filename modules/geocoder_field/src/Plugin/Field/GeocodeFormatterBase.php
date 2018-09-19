@@ -217,9 +217,10 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $elements = [];
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
     $provider_plugins = $this->getEnabledProviderPlugins();
+    $geocoder_plugins_options = (array) $this->config->get('plugins_options');
 
     foreach ($items as $delta => $item) {
-      if ($address_collection = $this->geocoder->geocode($item->value, array_keys($provider_plugins))) {
+      if ($address_collection = $this->geocoder->geocode($item->value, array_keys($provider_plugins), $geocoder_plugins_options)) {
         $elements[$delta] = [
           '#plain_text' => $dumper->dump($address_collection->first()),
         ];

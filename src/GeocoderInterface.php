@@ -16,11 +16,10 @@ interface GeocoderInterface {
    *   A list of plugin identifiers to use.
    * @param array $options
    *   (optional) An associative array with plugin options, keyed plugin by the
-   *   plugin id. Defaults to an empty array. These options would be merged with
-   *   (and would override) plugins options set in the module configurations.
+   *   plugin id. Defaults to an empty array.
    *
    * @return \Geocoder\Model\AddressCollection|null
-   *   An address collection or NULL on geocoding failure.
+   *   An address collection or NULL on gecoding failure.
    */
   public function geocode($data, array $plugins, array $options = []);
 
@@ -35,8 +34,7 @@ interface GeocoderInterface {
    *   A list of plugin identifiers to use.
    * @param array $options
    *   (optional) An associative array with plugin options, keyed plugin by the
-   *   plugin id. Defaults to an empty array. These options would be merged with
-   *   (and would override) plugins options set in the module configurations.
+   *   plugin id. Defaults to an empty array.
    *
    * @return \Geocoder\Model\AddressCollection|null
    *   An address collection or NULL on gecoding failure.
