@@ -90,19 +90,22 @@ $settings['http_client_config']['proxy'];
 ```php
 $plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
-// Array of options
-// Note: At the moment options are not automatically pulled in from the module config
-$options = array(
-  'geonames' => array(), // array of options
-  'googlemaps' => array(
-    'apikey' => 'my-api-key',
-    'usessl' => TRUE,
-  ),
-  'bingmaps' => array(), // array of options
-);
+
+// Array of (ovverriding) options (@see Note* below)
+$options = [
+  'freegeoip' => [], // array of options
+  'geonames' => [], // array of options
+  'googlemaps' => [], // array of options
+  'bingmaps' => [], // array of options
+];
 
 $addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $options);
+
+Note*: The last $options array parameter is optional, and merges/overrides the default plugins options set in the module configurations, that will be used normally as defaults.
+
 ```
+
+####Note
 
 ## Reverse geocode coordinates
 
@@ -110,16 +113,19 @@ $addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $
 $plugins = array('freegeoip', 'geonames', 'googlemaps', 'bingmaps');
 $lat = '37.422782';
 $lon = '-122.085099';
-// Array of options
-// Note: At the moment options are not automatically pulled in from the module config.
-$options = array(
-  'freegeoip' => array(), // array of options
-  'geonames' => array(), // array of options
-  'googlemaps' => array(), // array of options
-  'bingmaps' => array(), // array of options
-);
+
+// Array of (ovverriding) options (@see Note* below)
+$options = [
+  'freegeoip' => [], // array of options
+  'geonames' => [], // array of options
+  'googlemaps' => [], // array of options
+  'bingmaps' => [], // array of options
+];
 
 $addressCollection = \Drupal::service('geocoder')->reverse($lat, $lon, $plugins, $options);
+
+Note*: The last $options array parameter is optional, and merges/overrides the default plugins options set in the module configurations, that will be used normally as defaults.
+
 ```
 
 ## Return format
@@ -133,13 +139,8 @@ You can transform those objects into arrays. Example:
 ```php
 $plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
-$options = array(
-  'geonames' => array(), // array of options
-  'googlemaps' => array(), // array of options
-  'bingmaps' => array(), // array of options
-);
 
-$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $options);
+$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
 $address_array = $addressCollection->first()->toArray();
 
 // You can play a bit more with the API
@@ -161,13 +162,8 @@ Here's an example on how to use a Dumper:
 ```php
 $plugins = array('geonames', 'googlemaps', 'bingmaps'); 
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
-$options = array(
-  'geonames' => array(), // array of options
-  'googlemaps' => array(), // array of options
-  'bingmaps' => array(), // array of options
-);
 
-$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $options);
+$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
 $geojson = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('geojson')->dump($addressCollection->first());
 ```
 
@@ -176,13 +172,8 @@ There's also a dumper for GeoPHP, here's how to use it:
 ```php
 $plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
-$options = array(
-  'geonames' => array(), // array of options
-  'googlemaps' => array(), // array of options
-  'bingmaps' => array(), // array of options
-);
 
-$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins, $options);
+$addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
 $geometry = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('geometry')->dump($addressCollection->first());
 ```
 
