@@ -51,6 +51,8 @@ class Geocoder implements GeocoderInterface {
     $plugins_options = NestedArray::mergeDeep($plugins_options, $options);
 
     foreach ($plugins as $plugin_id) {
+      // Transform in empty array a null value for the plugin id options.
+      $plugins_options += [$plugin_id => []];
       $provider = $this->providerPluginManager->createInstance($plugin_id, $plugins_options[$plugin_id]);
 
       try {
@@ -79,6 +81,8 @@ class Geocoder implements GeocoderInterface {
     $plugins_options = NestedArray::mergeDeep($plugins_options, $options);
 
     foreach ($plugins as $plugin_id) {
+      // Transform in empty array a null value for the plugin id options.
+      $plugins_options += [$plugin_id => []];
       $provider = $this->providerPluginManager->createInstance($plugin_id, $plugins_options[$plugin_id]);
 
       try {
