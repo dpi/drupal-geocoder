@@ -7,8 +7,8 @@ use Geocoder\Model\Address;
 /**
  * Provides an interface for geocoder formatter plugins.
  *
- * Formatters are plugins that can reformat address components into custom
- * formatted string.
+ * Dumpers are plugins that knows to format geographical data into an industry
+ * standard format.
  */
 interface FormatterInterface {
 
