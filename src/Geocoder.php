@@ -18,7 +18,6 @@ class Geocoder implements GeocoderInterface {
    */
   protected $config;
 
-
   /**
    * The geocoder provider plugin manager service.
    *
@@ -43,7 +42,6 @@ class Geocoder implements GeocoderInterface {
    * {@inheritdoc}
    */
   public function geocode($data, array $plugins, array $options = []) {
-
     // Retrieve plugins options from the module configurations.
     $plugins_options = $this->config->get('plugins_options');
 
@@ -75,7 +73,6 @@ class Geocoder implements GeocoderInterface {
    * {@inheritdoc}
    */
   public function reverse($latitude, $longitude, array $plugins, array $options = []) {
-
     // Retrieve plugins options from the module configurations.
     $plugins_options = $this->config->get('plugins_options');
 
