@@ -3,7 +3,7 @@
 namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
 use Drupal\geocoder\DumperBase;
-use Geocoder\Model\Address;
+use Geocoder\Location;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\geocoder\FormatterPluginManager;
 
@@ -71,8 +71,8 @@ class AddressText extends DumperBase {
   /**
    * {@inheritdoc}
    */
-  public function dump(Address $address) {
-    return $this->geocoderFormatter->format($address);
+  public function dump(Location $location) {
+    return $this->geocoderFormatter->format($location);
   }
 
 }
