@@ -3,5 +3,5 @@ name: Geocoder Field
 description: 'Geocodes the content of a field and stores the result in other field and vice-versa.'
 core: 8.x
 dependencies:
-  - field
-  - geocoder
+  - drupal:field
+  - geocoder:geocoder
