@@ -3,5 +3,5 @@ name: Geocoder Geofield
 description: Providers Geocoder integration with contrib Geofield module.
 core: 8.x
 dependencies:
-  - geocoder_field
-  - geofield
+  - geocoder:geocoder_field
+  - geofield:geofield
