@@ -141,6 +141,14 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
       );
     }
 
+    // Add Computed field types, for Computed field module integration.
+    if ($this->moduleHandler->moduleExists('computed_field')) {
+      array_push($source_fields_types,
+        "computed_string",
+        "computed_string_long"
+      );
+    }
+
     return $this->getFieldsOptions(
       $entity_type_id,
       $bundle,
