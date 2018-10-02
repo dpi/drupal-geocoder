@@ -52,9 +52,9 @@ This is a complete rewrite of the Geocoder module, based on the
 The geocoder submodules are needed to set-up and implement Geocode and Reverse
 Geocode functionalities on Entity fields from the Drupal backend:
 * The **geocoder_field** module adds the ability to setup Geocode operations
-  among string/text fields on entity insert/edit and as field Geo formatters,
-  using all the available Geocoder Provider Plugins and Output Geo Formats (via
-  Dumpers).
+  on entity insert & edit operations among specific fields types so as field 
+  Geo formatters, using all the available Geocoder Provider Plugins and Output 
+  Geo Formats (via Dumpers).
 * The **geocoder_geofield** module provides integration with Geofield
   (module/field type) and the ability to both use it as target of Geocode or
   source of Reverse Geocode with the other fields;
@@ -64,6 +64,20 @@ Geocode functionalities on Entity fields from the Drupal backend:
 
 From the Geocoder configuration page it is possible to setup custom plugins 
 options.
+
+Throughout geocoder submodules **the following fields types are supported** 
+for Geocode and Reverse Geocode operations:
+
+ * "text",
+ * "text_long",
+ * "text_with_summary",
+ * "string",
+ * "string_long",
+ * "computed_string" (with "computed_field" module enabled);
+ * "computed_string_long" (with "computed_field" module enabled);
+ * "geofield" (with "geofield" sub-module and "geocoder_field" module enabled);
+ * "address" (with "address" module enabled);
+
 
 ### Note: Using Geocoder operations behind Proxy 
 
