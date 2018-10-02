@@ -4,6 +4,7 @@ namespace Drupal\geocoder;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Component\Plugin\Exception\PluginException;
 use Geocoder\Exception\InvalidCredentials;
 
 /**
@@ -61,7 +62,7 @@ class Geocoder implements GeocoderInterface {
           static::log($e->getMessage());
         }
       }
-      catch (\Exception $e) {
+      catch (PluginException $e) {
         static::log($e->getMessage());
       }
     }
@@ -92,7 +93,7 @@ class Geocoder implements GeocoderInterface {
           static::log($e->getMessage());
         }
       }
-      catch (\Exception $e) {
+      catch (PluginException $e) {
         static::log($e->getMessage());
       }
     }
