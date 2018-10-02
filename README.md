@@ -64,7 +64,8 @@ From the Geocoder configuration page it is possible to setup custom plugins
 options.
 
 Throughout geocoder submodules **the following fields types are supported** 
-for Geocode and Reverse Geocode operations:
+
+###### for Geocode operations:
 
  * "text",
  * "text_long",
@@ -73,11 +74,17 @@ for Geocode and Reverse Geocode operations:
  * "string_long",
  * "computed_string" (with "computed_field" module enabled);
  * "computed_string_long" (with "computed_field" module enabled);
- * "geofield" (with "geofield" sub-module and "geocoder_field" module enabled);
- * "address" (with "address" module enabled);
+ * "address" (with "address" module and "geocoder_address" sub-module enabled);
+ * "address_country" (with "address" module and "geocoder_address" sub-module enabled);
+ 
+###### for Reverse Geocode operations:
+ 
+ * "geofield" (with "geofield" module and "geocoder_geofield" sub-module enabled);
 
+**Note:** Geocoder Field sub-module provides hooks to alter (change and extend) the list of Geocoding and Reverse Geocoding fields types
+(@see geocoder_field.api)
 
-### Note: Using Geocoder operations behind Proxy 
+####Using Geocoder operations behind Proxy 
 
 GeocoderHttpAdapter is based on the Drupal 8 Guzzle implementation, 
 that is using settings array namespaced under $settings['http_client_config'].
