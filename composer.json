@@ -44,6 +44,7 @@
         "geocoder-php/google-maps-provider": "^4.2",
         "geocoder-php/host-ip-provider": "^4.0",
         "geocoder-php/ip-info-db-provider": "^4.0",
+        "geocoder-php/mapbox-provider": "^0.1",
         "geocoder-php/mapquest-provider": "^4.0",
         "geocoder-php/maxmind-provider": "^4.1",
         "geocoder-php/nominatim-provider": "^5.0",

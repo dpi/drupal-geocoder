@@ -100,6 +100,19 @@ geocoder.settings.plugins.ipinfodb:
       label: 'Precision (optional)'
       description: 'Either "city" or "country" (faster). Defaults to "city".'
 
+geocoder.settings.plugins.mapbox:
+  type: mapping
+  label: 'Mapbox arguments'
+  mapping:
+    accessToken:
+      type: string
+      label: 'Access Token'
+      description: '<a href="https://www.mapbox.com/signup/">Get your free API key</a>'
+    country:
+      type: string
+      label: 'Limit results to one or more countries. Permitted values are <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166 alpha 2</a> country codes separated by commas.'
+      nullable: true
+
 geocoder.settings.plugins.mapquest:
   type: mapping
   label: 'MapQuest arguments'
