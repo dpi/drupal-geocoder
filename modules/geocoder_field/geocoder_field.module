@@ -169,11 +169,6 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
       $original_field = $entity->original->get($geocoder['field']);
     }
 
-    // First we need to Pre-process field.
-    // Note: in case of Address module integration this creates the
-    // value as formatted address.
-    $preprocessor_manager->preprocess($remote_field);
-
     // Skip any action if:
     // remote value is null and the field value should be preserved
     // geofield has value and remote field value has not changed.
@@ -181,6 +176,11 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
       (NULL !== $original_field && !$entity->get($field_name)->isEmpty() && $remote_field->getValue() == $original_field->getValue())) {
       continue;
     }
+
+    // First we need to Pre-process field.
+    // Note: in case of Address module integration this creates the
+    // value as formatted address.
+    $preprocessor_manager->preprocess($remote_field);
 
     try {
       /** @var \Drupal\geocoder\DumperInterface|\Drupal\Component\Plugin\PluginInspectionInterface $dumper */
