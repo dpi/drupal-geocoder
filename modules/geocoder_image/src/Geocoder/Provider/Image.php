@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\geocoder\Geocoder\Provider;
+namespace Drupal\geocoder_image\Geocoder\Provider;
 
 use Geocoder\Exception\NoResult;
 use Geocoder\Exception\UnsupportedOperation;
@@ -8,23 +8,22 @@ use Geocoder\Provider\AbstractProvider;
 use Geocoder\Provider\Provider;
 
 /**
- * Provides a file handler to be used by 'file' plugin.
+ * Provides an image handler to be used by 'image' plugin.
  */
-class File extends AbstractProvider implements Provider {
+class Image extends AbstractProvider implements Provider {
 
   /**
    * {@inheritdoc}
    */
   public function getName() {
-    return 'file';
+    return 'image';
   }
 
   /**
    * {@inheritdoc}
    */
   public function geocode($filename) {
-    // Check that file type is a JPG (IMAGETYPE_JPEG) before exif_read.
-    if (file_exists($filename) && exif_imagetype($filename) == 2 && $exif = exif_read_data($filename)) {
+    if ($exif = exif_read_data($filename)) {
       if (isset($exif['GPSLatitude']) && isset($exif['GPSLatitudeRef']) && $exif['GPSLongitude'] && $exif['GPSLongitudeRef']) {
         $latitude = $this->getGpsExif($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
         $longitude = $this->getGpsExif($exif['GPSLongitude'], $exif['GPSLongitudeRef']);

@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Geocoder Image module.
+ */
+
+/**
+ * Implements hook_geocode_source_fields_alter().
+ */
+function geocoder_image_geocode_source_fields_alter(array &$source_fields_types) {
+  // Add Image field types, for Image field provider integration.
+  if (\Drupal::moduleHandler()->moduleExists('image')) {
+    array_push($source_fields_types,
+      "image"
+    );
+  }
+}

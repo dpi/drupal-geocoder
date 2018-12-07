@@ -1,0 +1,6 @@
+type: module
+name: Geocoder Image
+description: 'Provides Geocoder integration with Image Exif Geo Data.'
+core: 8.x
+dependencies:
+  - geocoder:geocoder_field

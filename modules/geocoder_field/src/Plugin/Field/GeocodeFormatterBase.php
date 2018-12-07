@@ -266,6 +266,13 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     if (empty($plugins)) {
       $form_state->setError($element, t('The selected Geocode operation needs at least one plugin.'));
     }
+
+    // Block the selection and set of the File Provider, that is not
+    // compatible with Geocoder Formatter operations.
+    if (array_key_exists('file', $plugins)) {
+      $form_state->setError($element, t('The File provider is not compatible with Geocoder Formatter operations. Please deselect it / choose another one.'));
+    }
+
   }
 
 }

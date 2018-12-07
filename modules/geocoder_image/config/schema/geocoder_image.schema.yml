@@ -1,0 +1,6 @@
+# Schema for Geocoder Image module.
+
+geocoder.settings.plugins.image:
+  type: sequence
+  label: 'Image arguments'
+  sequence:
