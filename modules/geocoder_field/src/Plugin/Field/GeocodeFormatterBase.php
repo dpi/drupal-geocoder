@@ -64,6 +64,15 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   protected $link;
 
   /**
+   * Geocoder Plugins not compatible with the Geocode Formatter action.
+   *
+   * @var array
+   */
+  protected $incompatiblePlugins = [
+    'file',
+  ];
+
+  /**
    * Constructs a GeocodeFormatterBase object.
    *
    * @param string $plugin_id
@@ -169,6 +178,12 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
 
     // Generates the Draggable Table of Selectable Geocoder Plugins.
     $element['plugins'] = $this->providerPluginManager->providersPluginsTableList($enabled_plugins);
+
+    // Filter out the Geocoder Plugins that are not compatible with the Geocode
+    // Formatter action.
+    $element['plugins'] = array_filter($element['plugins'], function ($e) {
+      return !in_array($e, $this->incompatiblePlugins);
+    }, ARRAY_FILTER_USE_KEY);
 
     // Set a validation for the plugins selection.
     $element['plugins']['#element_validate'] = [[get_class($this), 'validatePluginsSettingsForm']];

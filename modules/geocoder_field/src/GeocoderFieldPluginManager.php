@@ -134,6 +134,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
     // Add Image field types, for Image field and File provider integration.
     if ($this->moduleHandler->moduleExists('image')) {
       array_push($source_fields_types,
+        "file",
         "image"
       );
     }

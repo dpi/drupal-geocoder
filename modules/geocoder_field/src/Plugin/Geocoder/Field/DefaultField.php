@@ -369,10 +369,13 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       $entity = $form['#entity'];
       $field_definitions = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
       $geocode_field = $field_definitions[$form_values['geocode_field']];
-      if ($form_values['method'] == 'source' && $geocode_field->getType() != 'image') {
-        $form_state->setError($form['third_party_settings']['geocoder_field']['geocode_field'], t('The selected Geocode operation needs at least one plugin.'));
+      $geocode_field_type = $geocode_field->getType();
+      if ($form_values['method'] == 'source' && !in_array($geocode_field_type, ['file', 'image'])) {
+        $form_state->setError($form['third_party_settings']['geocoder_field']['geocode_field'], t('<b>File (only) Geocoding</b> is compatible with "file" or "image" field types (<b>@geocode_field</b> field is "@geocode_field_type" type instead).<br>Please change the source geocode field (or add/change geocoder provider).', [
+          '@geocode_field' => $geocode_field->getLabel(),
+          '@geocode_field_type' => $geocode_field_type,
+        ]));
       }
-
     }
   }
 

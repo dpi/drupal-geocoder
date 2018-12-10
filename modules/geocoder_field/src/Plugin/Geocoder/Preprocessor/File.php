@@ -67,11 +67,27 @@ class File extends PreprocessorBase {
       if ($value['target_id']) {
         $uri = FileEntity::load($value['target_id'])->getFileUri();
         $value['value'] = $this->fileSystem->realpath($uri);
-        $this->field->set($delta, $value);
+        try {
+          $this->field->set($delta, $value);
+        }
+        catch (\Exception $e) {
+          static::log($e->getMessage());
+        }
+
       }
     }
 
     return $this;
+  }
+
+  /**
+   * Log a message in the Drupal watchdog and on screen.
+   *
+   * @param string $message
+   *   The message.
+   */
+  public static function log($message) {
+    \Drupal::logger('geocoder')->error($message);
   }
 
 }
