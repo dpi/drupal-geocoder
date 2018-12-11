@@ -353,34 +353,6 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     if ($form_values['method'] == 'destination') {
       $form_state->setValue('delta_handling', 'default');
     }
-
-    // If the File or the Gpx File Geocoder provider is the only selected.
-    if (count($form_values['plugins']) == 1 && in_array($form_values['plugins'][0], ['file', 'gpxfile'])) {
-
-      $selected_plugin = $form_values['plugins'][0];
-
-      // Set error in case of Reverse Geocode operation (that is incompatible)
-      if ($form_values['method'] == 'destination') {
-        $form_state->setError($form['third_party_settings']['geocoder_field']['plugins']['file'], t('The "@selected_provider" Geocoder provider is not compatible with the Reverse Geocode action.', [
-          '@selected_provider' => $selected_plugin,
-        ]));
-      }
-
-      // For Geocode operation, verify that the geocode field is an image field
-      // type, and eventually set error otherwise.
-      /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-      $entity = $form['#entity'];
-      $field_definitions = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
-      $geocode_field = $field_definitions[$form_values['geocode_field']];
-      $geocode_field_type = $geocode_field->getType();
-      if ($form_values['method'] == 'source' && !in_array($geocode_field_type, ['file', 'image'])) {
-        $form_state->setError($form['third_party_settings']['geocoder_field']['geocode_field'], t('<b>"@selected_provider" (only) Geocoding</b> is compatible with "file" or "image" field types (<b>@geocode_field</b> field is "@geocode_field_type" type instead).<br>Please change the source geocode field (or add/change geocoder provider).', [
-          '@selected_provider' => $selected_plugin,
-          '@geocode_field' => $geocode_field->getLabel(),
-          '@geocode_field_type' => $geocode_field_type,
-        ]));
-      }
-    }
   }
 
 }
