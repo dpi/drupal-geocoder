@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\geocoder_geofield\Plugin\Geocoder\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
 use Drupal\geocoder\ProviderUsingHandlerBase;
 
@@ -10,7 +10,7 @@ use Drupal\geocoder\ProviderUsingHandlerBase;
  * @GeocoderProvider(
  *   id = "gpxfile",
  *   name = "GPXFile",
- *   handler = "\Drupal\geocoder_geofield\Geocoder\Provider\GPXFile"
+ *   handler = "\Drupal\geocoder\Geocoder\Provider\GPXFile"
  * )
  */
 class GPXFile extends ProviderUsingHandlerBase {}
