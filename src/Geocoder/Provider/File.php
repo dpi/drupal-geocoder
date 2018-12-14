@@ -77,7 +77,7 @@ class File extends AbstractProvider implements Provider {
    * {@inheritdoc}
    */
   public function reverse($latitude, $longitude) {
-    throw new UnsupportedOperation('The Image plugin is not able to do reverse geocoding.');
+    throw new UnsupportedOperation('The File plugin is not able to do reverse geocoding.');
   }
 
 }

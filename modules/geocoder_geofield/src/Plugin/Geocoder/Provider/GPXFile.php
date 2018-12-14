@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\geocoder\Plugin\Geocoder\Provider;
+namespace Drupal\geocoder_geofield\Plugin\Geocoder\Provider;
 
 use Drupal\geocoder\ProviderUsingHandlerBase;
 
 /**
- * Provides a File geocoder provider plugin.
+ * Provides a GPXFile geocoder provider plugin.
  *
  * @GeocoderProvider(
  *   id = "gpxfile",
  *   name = "GPXFile",
- *   handler = "\Drupal\geocoder\Geocoder\Provider\GPXFile"
+ *   handler = "\Drupal\geocoder_geofield\Geocoder\Provider\GPXFile"
  * )
  */
 class GPXFile extends ProviderUsingHandlerBase {}

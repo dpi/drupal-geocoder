@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
+namespace Drupal\geocoder_geofield\Plugin\Geocoder\Dumper;
 
 use Drupal\geocoder\DumperBase;
 

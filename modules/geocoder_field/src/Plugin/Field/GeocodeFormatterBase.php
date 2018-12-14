@@ -64,15 +64,6 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   protected $link;
 
   /**
-   * Geocoder Plugins not compatible with the Geocode Formatter action.
-   *
-   * @var array
-   */
-  protected $incompatiblePlugins = [
-    'file',
-  ];
-
-  /**
    * Constructs a GeocodeFormatterBase object.
    *
    * @param string $plugin_id
@@ -179,11 +170,6 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     // Generates the Draggable Table of Selectable Geocoder Plugins.
     $element['plugins'] = $this->providerPluginManager->providersPluginsTableList($enabled_plugins);
 
-    // Filter out the Geocoder Plugins that are not compatible with the Geocode
-    // Formatter action.
-    $element['plugins'] = array_filter($element['plugins'], function ($e) {
-      return !in_array($e, $this->incompatiblePlugins);
-    }, ARRAY_FILTER_USE_KEY);
 
     // Set a validation for the plugins selection.
     $element['plugins']['#element_validate'] = [[get_class($this), 'validatePluginsSettingsForm']];
@@ -280,12 +266,6 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
 
     if (empty($plugins)) {
       $form_state->setError($element, t('The selected Geocode operation needs at least one plugin.'));
-    }
-
-    // Block the selection and set of the File Provider, that is not
-    // compatible with Geocoder Formatter operations.
-    if (array_key_exists('file', $plugins)) {
-      $form_state->setError($element, t('The File provider is not compatible with Geocoder Formatter operations. Please deselect it / choose another one.'));
     }
 
   }
