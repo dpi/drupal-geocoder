@@ -131,7 +131,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
     // List the possible Geocoding Field Types.
     $source_fields_types = $this->preprocessorPluginManager->getGeocodeSourceFieldsTypes();
 
-    // Add Image field types, for Image field and File provider integration.
+    // Add File and Image field types, for File provider integration.
     if ($this->moduleHandler->moduleExists('image')) {
       array_push($source_fields_types,
         "file",
