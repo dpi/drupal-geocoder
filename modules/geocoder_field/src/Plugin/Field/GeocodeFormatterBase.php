@@ -170,7 +170,6 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     // Generates the Draggable Table of Selectable Geocoder Plugins.
     $element['plugins'] = $this->providerPluginManager->providersPluginsTableList($enabled_plugins);
 
-
     // Set a validation for the plugins selection.
     $element['plugins']['#element_validate'] = [[get_class($this), 'validatePluginsSettingsForm']];
 
@@ -267,7 +266,6 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     if (empty($plugins)) {
       $form_state->setError($element, t('The selected Geocode operation needs at least one plugin.'));
     }
-
   }
 
 }
