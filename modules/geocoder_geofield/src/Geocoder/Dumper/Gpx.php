@@ -45,7 +45,7 @@ class Geometry implements Dumper {
    * {@inheritdoc}
    */
   public function dump(Address $address) {
-    return $this->geophp->load($this->dumper->dump($address), 'json');
+    return $this->geophp->load($this->dumper->dump($address), 'gpx');
   }
 
   /**
