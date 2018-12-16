@@ -2,9 +2,10 @@
 
 namespace Drupal\geocoder_geofield\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\geocoder_field\Plugin\Field\FieldFormatter\FileGeocodeFormatter;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\Geocoder;
 use Drupal\geocoder\ProviderPluginManager;
@@ -13,8 +14,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\geocoder_field\PreprocessorPluginManager;
-use Drupal\geocoder_field\Plugin\Field\FieldFormatter\FileGeocodeFormatter;
-use Drupal\geofield\WktGenerator;
+use Drupal\geofield\GeoPHP\GeoPHPInterface;
 
 /**
  * Plugin implementation of the Geocode GPX" formatter for File fields.
@@ -26,7 +26,7 @@ use Drupal\geofield\WktGenerator;
  *     "file",
  *   },
  *   description =
- *   "Renders valid GPX data from the file content in WKT Linestring format"
+ *   "Renders valid GPX data from the file content in the chosen format"
  * )
  */
 class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
@@ -39,11 +39,11 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
   protected $formatterPlugin = 'gpxfile';
 
   /**
-   * The WKT Generator Service.
+   * The geoPhpWrapper service.
    *
-   * @var \Drupal\geofield\WktGenerator
+   * @var \Drupal\geofield\GeoPHP\GeoPHPInterface
    */
-  protected $wktGenerator;
+  protected $geoPhpWrapper;
 
   /**
    * Constructs a GeocodeFormatterFile object.
@@ -76,8 +76,8 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
    *   The Link Generator service.
    * @param \Drupal\geocoder_field\PreprocessorPluginManager $preprocessor_manager
    *   The Preprocessor Manager.
-   * @param \Drupal\geofield\WktGenerator $wkt_generator
-   *   The WKT Generator Service.
+   * @param \Drupal\geofield\GeoPHP\GeoPHPInterface $geophp_wrapper
+   *   The geoPhpWrapper.
    */
   public function __construct(
     $plugin_id,
@@ -94,7 +94,7 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
     RendererInterface $renderer,
     LinkGeneratorInterface $link_generator,
     PreprocessorPluginManager $preprocessor_manager,
-    WktGenerator $wkt_generator
+    GeoPHPInterface $geophp_wrapper
   ) {
     parent::__construct(
       $plugin_id,
@@ -112,8 +112,7 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
       $link_generator,
       $preprocessor_manager
     );
-    $this->preprocessorManager = $preprocessor_manager;
-    $this->wktGenerator = $wkt_generator;
+    $this->geoPhpWrapper = $geophp_wrapper;
   }
 
   /**
@@ -135,8 +134,17 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
       $container->get('renderer'),
       $container->get('link_generator'),
       $container->get('plugin.manager.geocoder.preprocessor'),
-      $container->get('geofield.wkt_generator')
+      $container->get('geofield.geophp')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return parent::defaultSettings() + [
+      'adapter' => 'wkt',
+    ];
   }
 
   /**
@@ -163,9 +171,14 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
       '#markup' => $this->formatterPlugin,
     ];
 
-    $element['dumper']['#options'] = ['wkt' => 'WKT Linestring'];
-    $element['dumper']['#description'] = $this->t('This settings cannot be changed');
+    $element['adapter'] = [
+      '#type' => 'select',
+      '#title' => 'Output format',
+      '#options' => $this->geoPhpWrapper->getAdapterMap(),
+      '#default_value' => $this->getSetting('$adapter'),
+    ];
 
+    unset($element['dumper']);
     return $element;
   }
 
@@ -174,11 +187,18 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
    */
   public function settingsSummary() {
     $summary = [];
+    $adapters = $this->geoPhpWrapper->getAdapterMap();
+    $adapter = $this->getSetting('adapter');
+
     $summary['intro'] = $this->pluginDefinition['description'];
     $summary['plugins'] = t('Geocoder plugin(s): @formatterPlugin', [
       '@formatterPlugin' => $this->formatterPlugin,
     ]);
-    $summary['dumper'] = t('Output format: WKT Linestring');
+
+    $summary['adapter'] = t('Output format: @format', [
+      '@format' => !empty($adapter) ? $adapters[$adapter] : $this->t('Not set'),
+    ]);
+
     return $summary;
   }
 
@@ -187,21 +207,20 @@ class GpxFileGeocodeFormatter extends FileGeocodeFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
+    $adapters = $this->geoPhpWrapper->getAdapterMap();
+    $adapter = $this->getSetting('adapter');
     try {
       /* @var \Drupal\geocoder_field\PreprocessorInterface $preprocessor */
       $preprocessor = $this->preprocessorManager->createInstance('file');
       $preprocessor->setField($items)->preprocess();
-      foreach ($items as $delta => $item) {
-        if ($address_collection = $this->geocoder->geocode($item->value, [$this->formatterPlugin])) {
-          $addresses = $address_collection->all();
-          $points = [];
-          /* @var \Geocoder\Model\Address $address */
-          foreach ($addresses as $address) {
-            $points[] = [$address->getCoordinates()->getLongitude(), $address->getCoordinates()->getLatitude()];
+      if (array_key_exists($adapter, $adapters)) {
+        foreach ($items as $delta => $item) {
+          /* @var \GeometryCollection $address_collection */
+          if ($address_collection = $this->geocoder->geocode($item->value, [$this->formatterPlugin])) {
+            $elements[$delta] = [
+              '#markup' => $address_collection->out($adapter),
+            ];
           }
-          $elements[$delta] = [
-            '#markup' => $this->wktGenerator->wktBuildLinestring($points),
-          ];
         }
       }
     }

@@ -218,17 +218,18 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
           default:
         }
 
-        // Normally each geocode/reverse result should be an AddressCollection.
+        // Normally each geocode/reverse should return an AddressCollection.
         if ($address_collection instanceof AddressCollection) {
           switch ($geocoder['delta_handling']) {
             // Single-to-multiple handling - if we can, explode out the
             // component geometries.
             case 's_to_m':
               foreach ($address_collection->all() as $collection_delta => $address) {
-                $result[] = $dumper->dump($address);
+                $this_result = $dumper->dump($address);
                 // Check|Fix some incompatibility between Dumper output and
                 // Field Config.
-                $dumper_manager->fixDumperFieldIncompatibility($result[$delta], $dumper, $field_config);
+                $dumper_manager->fixDumperFieldIncompatibility($this_result, $dumper, $field_config);
+                $result[] = $this_result;
               }
               break;
 
@@ -254,26 +255,26 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
         }
         // But in specific cases (such as GPX geocode) it might be Geometry.
         elseif ($address_collection instanceof Geometry) {
-          switch ($geocoder['delta_handling']) {
-            // Single-to-multiple handling - if we can, explode out the
-            // component geometries.
-            case 's_to_m':
-              /* @var \GeometryCollection $address_collection */
-              if ($address_collection instanceof GeometryCollection) {
-                $components = $address_collection->getComponents();
-                /* @var \Geometry $component */
-                foreach ($components as $component) {
-                  $result[] = $component->out('wkt');
-                }
+          // Single-to-multiple handling - if we can, explode out the
+          // component geometries.
+          if ($address_collection instanceof GeometryCollection && $geocoder['delta_handling'] == 's_to_m') {
+            /* @var \GeometryCollection $address_collection */
+            if ($address_collection instanceof GeometryCollection) {
+              $components = $address_collection->getComponents();
+              /* @var \Geometry $component */
+              foreach ($components as $component) {
+                $this_result = $component->out($dumper->getPluginId());
+                // Check|Fix some incompatibility between Dumper output and
+                // Field Config.
+                $dumper_manager->fixDumperFieldIncompatibility($this_result, $dumper, $field_config);
+                $result[] = $this_result;
               }
-              else {
-                $result[$delta] = $address_collection->out('wkt');
-              }
-              break;
-
-            // Default delta handling: just pass one delta to the next.
-            default:
-              $result[$delta] = $address_collection->out('wkt');
+            }
+          }
+          else {
+            $result[] = $address_collection->out($dumper->getPluginId());
+            // Check|Fix some incompatibility between result and Field Config.
+            $dumper_manager->fixDumperFieldIncompatibility($result[$delta], $dumper, $field_config);
           }
           continue;
         }
@@ -289,8 +290,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
         }
         // Log the failure.
         if ($geocoder['failure']['log']) {
-          \Drupal::logger('geocoder')
-            ->warning($failure_status_message);
+          \Drupal::logger('geocoder')->warning($failure_status_message);
         }
       }
       $entity->set($field_name, $result);
