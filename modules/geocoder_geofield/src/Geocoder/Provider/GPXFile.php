@@ -41,27 +41,11 @@ class GPXFile extends AbstractProvider implements Provider {
     $gpx_string = file_get_contents($filename);
     /* @var \Geometry|\GeometryCollection $geometry */
     $geometry = $this->geophp->load($gpx_string, 'gpx');
-
-    $results = [];
-    /* @var \Geometry $component */
-    foreach ($geometry->getComponents() as $component) {
-      // Currently the Provider only supports GPX points, so skip the rest.
-      if ('Point' !== $component->getGeomType()) {
-        continue;
-      }
-
-      $result_set = $this->getDefaults();
-      $result_set['latitude'] = $component->y();
-      $result_set['longitude'] = $component->x();
-
-      $results[] = array_merge($this->getDefaults(), $result_set);
+    if (!empty($geometry->components)) {
+      return $geometry;
     }
-
-    if (!empty($results)) {
-      return $this->returnResults($results);
-    }
-
     throw new NoResult(sprintf('Could not find GPX data in file: "%s".', basename($filename)));
+
   }
 
   /**
