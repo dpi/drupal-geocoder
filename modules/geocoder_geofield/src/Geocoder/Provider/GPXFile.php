@@ -38,14 +38,15 @@ class GPXFile extends AbstractProvider implements Provider {
    * {@inheritdoc}
    */
   public function geocode($filename) {
-    $gpx_string = file_get_contents($filename);
-    /* @var \Geometry|\GeometryCollection $geometry */
-    $geometry = $this->geophp->load($gpx_string, 'gpx');
-    if (!empty($geometry->components)) {
-      return $geometry;
+    if (file_exists($filename)) {
+      $gpx_string = file_get_contents($filename);
+      /* @var \Geometry|\GeometryCollection $geometry */
+      $geometry = $this->geophp->load($gpx_string, 'gpx');
+      if (!empty($geometry->components)) {
+        return $geometry;
+      }
     }
     throw new NoResult(sprintf('Could not find GPX data in file: "%s".', basename($filename)));
-
   }
 
   /**

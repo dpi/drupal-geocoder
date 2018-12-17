@@ -253,8 +253,9 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
           }
           continue;
         }
-        // But in specific cases (such as GPX geocode) it might be Geometry.
-        elseif ($address_collection instanceof Geometry) {
+        // But in specific cases (such as GPX geocode) it might be Geometry,
+        // and the chosen dumper id equals a possible geofield.geophp adapter.
+        elseif ($address_collection instanceof Geometry && array_key_exists($dumper->getPluginId(), \Drupal::service('geofield.geophp')->getAdapterMap())) {
           // Single-to-multiple handling - if we can, explode out the
           // component geometries.
           if ($address_collection instanceof GeometryCollection && $geocoder['delta_handling'] == 's_to_m') {
