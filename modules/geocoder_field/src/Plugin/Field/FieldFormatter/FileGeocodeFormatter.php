@@ -20,7 +20,7 @@ use Drupal\geocoder_field\PreprocessorPluginManager;
  *
  * @FieldFormatter(
  *   id = "geocoder_geocode_formatter_file",
- *   label = @Translation("Geocode File/Image Gps Exif data"),
+ *   label = @Translation("Geocode File/Image Gps Exif"),
  *   field_types = {
  *     "file",
  *     "image",

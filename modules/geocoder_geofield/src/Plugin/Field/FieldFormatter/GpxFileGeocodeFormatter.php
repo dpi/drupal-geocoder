@@ -21,7 +21,7 @@ use Drupal\geofield\GeoPHP\GeoPHPInterface;
  *
  * @FieldFormatter(
  *   id = "geocoder_geocode_formatter_gpxfile",
- *   label = @Translation("Geocode GPX data"),
+ *   label = @Translation("Geocode GPX"),
  *   field_types = {
  *     "file",
  *   },
