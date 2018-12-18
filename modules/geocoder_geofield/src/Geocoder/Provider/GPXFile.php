@@ -8,7 +8,7 @@ use Geocoder\Provider\AbstractProvider;
 use Geocoder\Provider\Provider;
 
 /**
- * Provides a file handler to be used by 'file' plugin.
+ * Provides a file handler to be used by 'gpxfile' plugin.
  */
 class GPXFile extends AbstractProvider implements Provider {
 
@@ -38,28 +38,15 @@ class GPXFile extends AbstractProvider implements Provider {
    * {@inheritdoc}
    */
   public function geocode($filename) {
-    $gpx_string = file_get_contents($filename);
-    $geometry = $this->geophp->load($gpx_string, 'gpx');
-
-    $results = [];
-    foreach ($geometry->getComponents() as $component) {
-      // Currently the Provider only supports GPX points, so skip the rest.
-      if ('Point' !== $component->getGeomType()) {
-        continue;
+    if (file_exists($filename)) {
+      $gpx_string = file_get_contents($filename);
+      /* @var \Geometry|\GeometryCollection $geometry */
+      $geometry = $this->geophp->load($gpx_string, 'gpx');
+      if (!empty($geometry->components)) {
+        return $geometry;
       }
-
-      $resultSet = $this->getDefaults();
-      $resultSet['latitude'] = $component->y();
-      $resultSet['longitude'] = $component->x();
-
-      $results[] = array_merge($this->getDefaults(), $resultSet);
     }
-
-    if (!empty($results)) {
-      return $this->returnResults($results);
-    }
-
-    throw new NoResult(sprintf('Could not find geo data in file: "%s".', basename($filename)));
+    throw new NoResult(sprintf('Could not find GPX data in file: "%s".', basename($filename)));
   }
 
   /**
