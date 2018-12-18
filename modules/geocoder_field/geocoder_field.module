@@ -218,7 +218,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
           default:
         }
 
-        // Normally each geocode/reverse should return an AddressCollection.
+        // Normally each geocode/reverse op would return an AddressCollection.
         if ($address_collection instanceof AddressCollection) {
           switch ($geocoder['delta_handling']) {
             // Single-to-multiple handling - if we can, explode out the
@@ -253,8 +253,9 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
           }
           continue;
         }
-        // But in specific cases (such as GPX geocode) it might be Geometry,
-        // and the chosen dumper id equals a possible geofield.geophp adapter.
+        // But some specific geocode/reverse ops (such as GPX geocode) might
+        // return Geometry/GeometryCollection, and this may be managed if
+        // the chosen dumper id equals a possible geofield.geophp adapter.
         elseif ($address_collection instanceof Geometry && array_key_exists($dumper->getPluginId(), \Drupal::service('geofield.geophp')->getAdapterMap())) {
           // Single-to-multiple handling - if we can, explode out the
           // component geometries.
