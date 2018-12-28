@@ -29,6 +29,8 @@ class GeocodeFormatter extends GeocodeFormatterBase {
   protected $incompatiblePlugins = [
     'file',
     'gpxfile',
+    'kmlfile',
+    'geojsonfile',
   ];
 
   /**
