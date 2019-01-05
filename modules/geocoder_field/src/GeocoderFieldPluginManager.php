@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\geocoder_field;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -113,6 +115,22 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
     }
 
     return NULL;
+  }
+
+  /**
+   * Returns the field types that are supported by the Geocoder fields.
+   *
+   * @return array
+   *   An associative array of field type IDs, keyed by field type ID.
+   */
+  public function getFieldTypes(): array {
+    $field_types = [];
+    foreach ($this->getDefinitions() as $definition) {
+      foreach ($definition['field_types'] as $field_type) {
+        $field_types[$field_type] = $field_type;
+      }
+    }
+    return $field_types;
   }
 
   /**

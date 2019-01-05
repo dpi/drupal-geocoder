@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\geocoder;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Geocoder\Model\AddressCollection;
 
 /**
  * Provides a geocoder factory class.
@@ -40,53 +42,35 @@ class Geocoder implements GeocoderInterface {
   /**
    * {@inheritdoc}
    */
-  public function geocode($data, array $plugins, array $options = []) {
-    // Retrieve plugins options from the module configurations.
-    $plugins_options = $this->config->get('plugins_options');
-
-    // Merge possible options overrides into plugins options.
-    $plugins_options = NestedArray::mergeDeep($plugins_options, $options);
-
-    foreach ($plugins as $plugin_id) {
-      // Transform in empty array a null value for the plugin id options.
-      $plugins_options += [$plugin_id => []];
-
+  public function geocode(string $data, array $providers): ?AddressCollection {
+    /** @var \Drupal\geocoder\GeocoderProviderInterface $provider */
+    foreach ($providers as $provider) {
       try {
-        $provider = $this->providerPluginManager->createInstance($plugin_id, $plugins_options[$plugin_id]);
-        return $provider->geocode($data);
+        return $provider->getPlugin()->geocode($data);
       }
       catch (\Exception $e) {
         static::log($e->getMessage());
       }
     }
 
-    return FALSE;
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function reverse($latitude, $longitude, array $plugins, array $options = []) {
-    // Retrieve plugins options from the module configurations.
-    $plugins_options = $this->config->get('plugins_options');
-
-    // Merge possible options overrides into plugins options.
-    $plugins_options = NestedArray::mergeDeep($plugins_options, $options);
-
-    foreach ($plugins as $plugin_id) {
-      // Transform in empty array a null value for the plugin id options.
-      $plugins_options += [$plugin_id => []];
-
+  public function reverse(string $latitude, string $longitude, array $providers): ?AddressCollection {
+    /** @var \Drupal\geocoder\GeocoderProviderInterface $provider */
+    foreach ($providers as $provider) {
       try {
-        $provider = $this->providerPluginManager->createInstance($plugin_id, $plugins_options[$plugin_id]);
-        return $provider->reverse($latitude, $longitude);
+        return $provider->getPlugin()->reverse($latitude, $longitude);
       }
       catch (\Exception $e) {
         static::log($e->getMessage());
       }
     }
 
-    return FALSE;
+    return NULL;
   }
 
   /**

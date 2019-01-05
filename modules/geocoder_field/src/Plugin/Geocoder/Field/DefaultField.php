@@ -2,6 +2,7 @@
 
 namespace Drupal\geocoder_field\Plugin\Geocoder\Field;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -12,6 +13,7 @@ use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\ProviderPluginManager;
 use Drupal\geocoder_field\GeocoderFieldPluginInterface;
 use Drupal\geocoder_field\GeocoderFieldPluginManager;
+use Drupal\geocoder_field\Traits\ProvidersTableListTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -32,6 +34,8 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
  * )
  */
 class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, ContainerFactoryPluginInterface {
+
+  use ProvidersTableListTrait;
 
   /**
    * The config factory service.
@@ -83,6 +87,13 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
   protected $link;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a 'default' plugin.
    *
    * @param array $configuration
@@ -105,6 +116,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    *   The renderer.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The Link Generator service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
   public function __construct(
     array $configuration,
@@ -116,7 +129,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     DumperPluginManager $dumper_plugin_manager,
     ProviderPluginManager $provider_plugin_manager,
     RendererInterface $renderer,
-    LinkGeneratorInterface $link_generator
+    LinkGeneratorInterface $link_generator,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->config = $config_factory->get('geocoder.settings');
@@ -126,6 +140,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     $this->providerPluginManager = $provider_plugin_manager;
     $this->renderer = $renderer;
     $this->link = $link_generator;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -142,7 +157,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       $container->get('plugin.manager.geocoder.dumper'),
       $container->get('plugin.manager.geocoder.provider'),
       $container->get('renderer'),
-      $container->get('link_generator')
+      $container->get('link_generator'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -267,12 +283,12 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#states' => $invisible_state,
     ];
 
-    // Get the enabled/selected plugins.
-    $enabled_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
+    // Get the enabled/selected providers.
+    $enabled_providers = (array) $field->getThirdPartySetting('geocoder_field', 'providers');
 
     // Generates the Draggable Table of Selectable Geocoder Plugins.
-    $element['plugins'] = $this->providerPluginManager->providersPluginsTableList($enabled_plugins);
-    $element['plugins']['#states'] = $invisible_state;
+    $element['providers'] = $this->providersTableList($enabled_providers);
+    $element['providers']['#states'] = $invisible_state;
 
     $element['dumper'] = [
       '#type' => 'select',
@@ -343,8 +359,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
   public function validateSettingsForm(array $form, FormStateInterface &$form_state) {
     $form_values = $form_state->getValues();
 
-    if ($form_values['method'] !== 'none' && empty($form_values['plugins'])) {
-      $form_state->setError($form['third_party_settings']['geocoder_field']['plugins'], t('The selected Geocode operation needs at least one plugin.'));
+    if ($form_values['method'] !== 'none' && empty($form_values['providers'])) {
+      $form_state->setError($form['third_party_settings']['geocoder_field']['providers'], t('The selected Geocode operation needs at least one provider.'));
     }
 
     // On Reverse Geocode the delta_handling should always be 'default'

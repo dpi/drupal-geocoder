@@ -19,9 +19,9 @@ field.field.*.*.*.third_party.geocoder_field:
     disabled:
       type: boolean
       label: 'Disable field'
-    plugins:
+    providers:
       type: sequence
-      label: 'Geocoding plugins'
+      label: 'Geocoding providers'
       sequence:
         type: string
     dumper:

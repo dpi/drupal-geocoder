@@ -31,7 +31,7 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
     catch (PluginException $e) {
       $this->loggerFactory->get('geocoder')->error('No Dumper has been set');
     }
-    $provider_plugins = $this->getEnabledProviderPlugins();
+    $providers = $this->getEnabledGeocoderProviders();
 
     /** @var \Drupal\geofield\GeoPHP\GeoPHPInterface $geophp */
     $geophp = \Drupal::service('geofield.geophp');
@@ -43,7 +43,7 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
       /** @var \Point $centroid */
       $centroid = $geom->getCentroid();
 
-      if ($address_collection = $this->geocoder->reverse($centroid->y(), $centroid->x(), array_keys($provider_plugins))) {
+      if ($address_collection = $this->geocoder->reverse($centroid->y(), $centroid->x(), $providers)) {
         $elements[$delta] = [
           '#markup' => $address_collection instanceof AddressCollection && !$address_collection->isEmpty() ? $dumper->dump($address_collection->first()) : "",
         ];

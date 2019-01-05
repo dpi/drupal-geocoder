@@ -2,7 +2,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
+use Drupal\geocoder\ConfigurableProviderUsingHandlerWithAdapterBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -24,7 +24,7 @@ use Http\Client\HttpClient;
  *   }
  * )
  */
-class GoogleMapsBusiness extends ProviderUsingHandlerWithAdapterBase {
+class GoogleMapsBusiness extends ConfigurableProviderUsingHandlerWithAdapterBase {
 
   /**
    * GoogleMapsBusiness constructor.

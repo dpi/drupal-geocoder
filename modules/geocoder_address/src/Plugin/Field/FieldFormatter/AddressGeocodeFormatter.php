@@ -31,7 +31,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
     catch (PluginException $e) {
       $this->loggerFactory->get('geocoder')->error('No Dumper has been set');
     }
-    $provider_plugins = $this->getEnabledProviderPlugins();
+    $providers = $this->getEnabledGeocoderProviders();
 
     foreach ($items as $delta => $item) {
       $value = $item->getValue();
@@ -43,7 +43,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
       $address[] = !empty($value['locality']) ? $value['locality'] : NULL;
       $address[] = !empty($value['country']) ? $value['country'] : NULL;
 
-      if ($address_collection = $this->geocoder->geocode(implode(' ', array_filter($address)), array_keys($provider_plugins))) {
+      if ($address_collection = $this->geocoder->geocode(implode(' ', array_filter($address)), $providers)) {
         $elements[$delta] = [
           '#markup' => $address_collection instanceof AddressCollection && !$address_collection->isEmpty() ? $dumper->dump($address_collection->first()) : "",
         ];

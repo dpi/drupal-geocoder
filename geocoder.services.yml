@@ -11,7 +11,7 @@ services:
   plugin.manager.geocoder.provider:
     class: Drupal\geocoder\ProviderPluginManager
     parent: default_plugin_manager
-    arguments: ['@config.factory', '@string_translation', '@renderer', '@link_generator', '@messenger']
+    arguments: ['@config.factory', '@string_translation', '@renderer']
 
   plugin.manager.geocoder.dumper:
     class: Drupal\geocoder\DumperPluginManager
@@ -28,3 +28,9 @@ services:
       - { name: cache.bin }
     factory: cache_factory:get
     arguments: [geocoder]
+
+  geocoder.breadcrumb:
+    class: Drupal\geocoder\GeocoderBreadcrumbBuilder
+    arguments: ['@router.request_context', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver', '@current_user', '@path.current', '@path.matcher']
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }

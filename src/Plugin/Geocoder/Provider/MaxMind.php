@@ -2,7 +2,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
+use Drupal\geocoder\ConfigurableProviderUsingHandlerWithAdapterBase;
 
 /**
  * Provides a MaxMind geocoder provider plugin.
@@ -17,4 +17,4 @@ use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
  *   }
  * )
  */
-class MaxMind extends ProviderUsingHandlerWithAdapterBase {}
+class MaxMind extends ConfigurableProviderUsingHandlerWithAdapterBase {}

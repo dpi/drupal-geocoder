@@ -13,6 +13,8 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Locale\CountryManager;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\geocoder\Entity\GeocoderProvider;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Implements hook_form_alter().
@@ -91,9 +93,9 @@ function geocoder_field_field_config_edit_form_validate(array $form, FormStateIn
     return;
   }
 
-  // Clean-up and normalize the plugin list.
-  $trail = ['third_party_settings', 'geocoder_field', 'plugins'];
-  $plugins = array_keys(
+  // Clean-up and normalize the provider list.
+  $trail = ['third_party_settings', 'geocoder_field', 'providers'];
+  $providers = array_keys(
     array_filter(
       $form_state->getValue($trail),
       function ($item) {
@@ -101,7 +103,7 @@ function geocoder_field_field_config_edit_form_validate(array $form, FormStateIn
       }
     )
   );
-  $form_state->setValue($trail, $plugins);
+  $form_state->setValue($trail, $providers);
 
   // Give a chance to the geocoder field plugin to perform its own validation.
   $geocoder_data = (new FormState())->setValues($form_state->getValue(['third_party_settings', 'geocoder_field']));
@@ -192,6 +194,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
     $default_values = $entity->get($field_name);
     $result = [];
     $failure_status_message = NULL;
+    $providers = GeocoderProvider::loadMultiple($geocoder['providers']);
 
     foreach ($remote_field->getValue() as $delta => $value) {
       if ($remote_field->getFieldDefinition()->getType() === 'address_country') {
@@ -202,12 +205,12 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
       switch ($geocoder['method']) {
         case 'geocode':
           $failure_status_message = t("Unable to geocode '@text'.", ['@text' => isset($value['value']) ? $value['value'] : '']);
-          $address_collection = isset($value['value']) ? \Drupal::service('geocoder')->geocode($value['value'], $geocoder['plugins']) : NULL;
+          $address_collection = isset($value['value']) ? \Drupal::service('geocoder')->geocode($value['value'], $providers) : NULL;
           break;
 
         case 'reverse_geocode':
           $failure_status_message = t('Unable to reverse geocode the <em>@field_name</em> value.', ['@field_name' => $field_name]);
-          $address_collection = isset($value['lat']) && isset($value['lon']) ? \Drupal::service('geocoder')->reverse($value['lat'], $value['lon'], $geocoder['plugins']) : NULL;
+          $address_collection = isset($value['lat']) && isset($value['lon']) ? \Drupal::service('geocoder')->reverse($value['lat'], $value['lon'], $providers) : NULL;
           break;
 
         default:

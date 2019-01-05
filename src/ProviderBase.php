@@ -126,7 +126,7 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
    * @param string $source
    *   The data to be geocoded.
    *
-   * @return \Geocoder\Model\Address|null
+   * @return \Geocoder\Model\AddressCollection|null
    *   The Address, NULL otherwise.
    */
   abstract protected function doGeocode($source);

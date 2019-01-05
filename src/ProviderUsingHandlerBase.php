@@ -30,17 +30,23 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager) {
+    // The ProviderBase constructor needs to be run anyway (before possible
+    // exception @throw), to allow the ProviderBase process method.
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend, $language_manager);
     if (empty($plugin_definition['handler'])) {
       throw new InvalidPluginDefinitionException($plugin_id, "Plugin '$plugin_id' should define a handler.");
     }
-
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend, $language_manager);
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \ReflectionException
+   * @throws \Geocoder\Exception\Exception
    */
   protected function doGeocode($source) {
     return $this->getHandlerWrapper()->geocode($source);
@@ -48,6 +54,9 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \ReflectionException
+   * @throws \Geocoder\Exception\Exception
    */
   protected function doReverse($latitude, $longitude) {
     return $this->getHandlerWrapper()->reverse($latitude, $longitude);

@@ -2,7 +2,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
+use Drupal\geocoder\ConfigurableProviderUsingHandlerWithAdapterBase;
 
 /**
  * Provides an OpenStreetMap geocoder provider plugin.
@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
  *   }
  * )
  */
-class OpenStreetMap extends ProviderUsingHandlerWithAdapterBase {}
+class OpenStreetMap extends ConfigurableProviderUsingHandlerWithAdapterBase {}

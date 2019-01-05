@@ -47,6 +47,8 @@ abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerB
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
