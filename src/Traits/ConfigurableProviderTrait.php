@@ -75,9 +75,8 @@ trait ConfigurableProviderTrait {
       }
     }
     catch (\Exception $e) {
-      watchdog_exception('geocoder', $e);
       $form['plugin_arguments_exception'] = [
-        '#markup' => $this->t('This Geocoder Provider cannot be added due to @message', [
+        '#markup' => $this->t("No configurations options requested for this Provider: @message", [
           '@message' => $e->getMessage(),
         ]),
       ];
@@ -133,7 +132,7 @@ trait ConfigurableProviderTrait {
     $config_schema_definition = $this->getConfigSchemaDefinition();
 
     if (empty($config_schema_definition['mapping'])) {
-      throw new SchemaIncompleteException("The $plugin_id Geocoder provider plugin is configurable but no configuration options are defined in its schema definition.");
+      throw new SchemaIncompleteException("The $plugin_id Geocoder provider plugin doesn't have any options defined in its schema definition.");
     }
 
     if (empty($this->pluginDefinition['arguments'])) {
