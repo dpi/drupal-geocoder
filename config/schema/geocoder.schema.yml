@@ -195,11 +195,6 @@ geocoder_provider.configuration.tomtom:
 geocoder_provider.configuration.file:
   type: geocoder_provider_configuration
   label: 'File arguments'
-  mapping:
-    filename:
-      type: string
-      label: 'Filename'
-      description: 'The path to the file that contains the geocoding information.'
 
 geocoder_provider.configuration.freegeoip:
   type: geocoder_provider_configuration
@@ -209,6 +204,10 @@ geocoder_provider.configuration.freegeoip:
       type: string
       label: 'Base URL'
       description: 'URL of the FreeGeoIP API endpoint.'
+
+geocoder_provider.configuration.geojsonfile:
+  type: geocoder_provider_configuration
+  label: 'GeoJson File arguments'
 
 geocoder_provider.configuration.geoip:
   type: geocoder_provider_configuration
@@ -220,11 +219,15 @@ geocoder_provider.configuration.geoplugin:
 
 geocoder_provider.configuration.gpxfile:
   type: geocoder_provider_configuration
-  label: 'Gpxfile arguments'
+  label: 'Gpx file arguments'
 
 geocoder_provider.configuration.hostip:
   type: geocoder_provider_configuration
   label: 'Hostip arguments'
+
+geocoder_provider.configuration.kmlfile:
+  type: geocoder_provider_configuration
+  label: 'Kml File arguments'
 
 geocoder_provider.configuration.openstreetmap:
   type: geocoder_provider_configuration

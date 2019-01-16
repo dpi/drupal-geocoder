@@ -42,7 +42,7 @@ class Geocoder implements GeocoderInterface {
   /**
    * {@inheritdoc}
    */
-  public function geocode(string $data, array $providers): ?AddressCollection {
+  public function geocode(string $data, array $providers) {
     /** @var \Drupal\geocoder\GeocoderProviderInterface $provider */
     foreach ($providers as $provider) {
       try {

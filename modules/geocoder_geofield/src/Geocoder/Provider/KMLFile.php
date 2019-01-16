@@ -3,22 +3,22 @@
 namespace Drupal\geocoder_geofield\Geocoder\Provider;
 
 /**
- * Provides a file handler to be used by 'gpxfile' plugin.
+ * Provides a file handler to be used by 'kmlfile' plugin.
  */
-class GPXFile extends AbstractGeometryProvider implements GeometryProviderInterface {
+class KMLFile extends AbstractGeometryProvider {
 
   /**
    * Geophp Type.
    *
    * @var string
    */
-  protected $geophpType = 'gpx';
+  protected $geophpType = 'kml';
 
   /**
    * {@inheritdoc}
    */
   public function getName(): string {
-    return 'gpxfile';
+    return 'kmlfile';
   }
 
 }

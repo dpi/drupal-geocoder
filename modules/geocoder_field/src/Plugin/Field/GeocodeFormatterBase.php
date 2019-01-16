@@ -79,6 +79,13 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   protected $entityTypeManager;
 
   /**
+   * The list of created Geocoder Providers.
+   *
+   * @var array
+   */
+  protected $geocoderProviders = [];
+
+  /**
    * Constructs a GeocodeFormatterBase object.
    *
    * @param string $plugin_id
@@ -134,6 +141,13 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $this->link = $link_generator;
     $this->loggerFactory = $logger_factory;
     $this->entityTypeManager = $entity_type_manager;
+    try {
+      $this->geocoderProviders = $this->entityTypeManager->getStorage('geocoder_provider')
+        ->loadMultiple();
+    }
+    catch (\Exception $e) {
+      watchdog_exception('geocoder', $e);
+    }
   }
 
   /**
@@ -173,6 +187,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
+    $providers = !empty($this->getSetting('providers')) ? $this->getSetting('providers') : [];
 
     // Attach Geofield Map Library.
     $element['#attached']['library'] = [
@@ -181,7 +196,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
 
     // Get the enabled/selected providers.
     $enabled_providers = [];
-    foreach ($this->getSetting('providers') as $provider_id => $provider_settings) {
+    foreach ($providers as $provider_id => $provider_settings) {
       if ($provider_settings['checked']) {
         $enabled_providers[] = $provider_id;
       }
@@ -217,11 +232,11 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       return $provider->label();
     }, $this->getEnabledGeocoderProviders());
 
-    $summary[] = $this->t('Geocoder providers(s): @provider_ids', [
+    $summary['providers'] = $this->t('Geocoder providers(s): @provider_ids', [
       '@provider_ids' => !empty($provider_labels) ? implode(', ', $provider_labels) : $this->t('Not set'),
     ]);
 
-    $summary[] = $this->t('Output format: @format', [
+    $summary['dumper'] = $this->t('Output format: @format', [
       '@format' => !empty($dumper_plugin) ? $dumper_plugins[$dumper_plugin] : $this->t('Not set'),
     ]);
 
@@ -259,11 +274,10 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    *   The enabled Geocoder providers, sorted by weight.
    */
   public function getEnabledGeocoderProviders(): array {
-    $providers = $this->entityTypeManager->getStorage('geocoder_provider')->loadMultiple();
     $formatter_settings = $this->getSetting('providers');
 
     // Filter out all providers that are disabled.
-    $providers = array_filter($providers, function (GeocoderProvider $provider) use ($formatter_settings): bool {
+    $providers = array_filter($this->geocoderProviders, function (GeocoderProvider $provider) use ($formatter_settings): bool {
       return !empty($formatter_settings[$provider->id()]) && $formatter_settings[$provider->id()]['checked'] == TRUE;
     });
 
@@ -279,6 +293,16 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   }
 
   /**
+   * Returns the list of created Geocoder Providers.
+   *
+   * @return \Drupal\geocoder\Entity\GeocoderProvider[]
+   *   The list of created Geocoder Providers.
+   */
+  public function getGeocoderProviders(): array {
+    return $this->geocoderProviders;
+  }
+
+  /**
    * Validates the providers selection.
    *
    * @param array $element
@@ -287,9 +311,9 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    *   The form state object.
    */
   public static function validateProvidersSettingsForm(array $element, FormStateInterface &$form_state) {
-    $providers = array_filter($element['#value'], function ($value) {
+    $providers = !empty($element['#value']) ? array_filter($element['#value'], function ($value) {
       return isset($value['checked']) && TRUE == $value['checked'];
-    });
+    }) : [];
 
     if (empty($providers)) {
       $form_state->setError($element, t('The selected Geocode operation needs at least one provider.'));

@@ -3,22 +3,22 @@
 namespace Drupal\geocoder_geofield\Geocoder\Provider;
 
 /**
- * Provides a file handler to be used by 'gpxfile' plugin.
+ * Provides a file handler to be used by 'geojsonfile' plugin.
  */
-class GPXFile extends AbstractGeometryProvider implements GeometryProviderInterface {
+class GeoJsonFile extends AbstractGeometryProvider {
 
   /**
    * Geophp Type.
    *
    * @var string
    */
-  protected $geophpType = 'gpx';
+  protected $geophpType = 'geojson';
 
   /**
    * {@inheritdoc}
    */
   public function getName(): string {
-    return 'gpxfile';
+    return 'geojsonfile';
   }
 
 }

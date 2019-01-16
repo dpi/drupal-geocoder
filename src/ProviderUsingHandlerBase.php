@@ -8,6 +8,7 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Geocoder\StatefulGeocoder;
 use Geocoder\Provider\Provider;
+use Drupal\geocoder_geofield\Geocoder\Provider\GeometryProviderInterface;
 
 /**
  * Provides a base class for providers using handlers.
@@ -49,7 +50,15 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
    * @throws \Geocoder\Exception\Exception
    */
   protected function doGeocode($source) {
-    return $this->getHandlerWrapper()->geocode($source);
+    // In case of a Geocoder Provider returning a \Geocoder\Collection.
+    if ($this->getHandler() instanceof Provider) {
+      return $this->getHandlerWrapper()->geocode($source);
+    }
+    // In case of a GeoPHP Geometry Provider returning a \Geometry.
+    if ($this->getHandler() instanceof GeometryProviderInterface) {
+      return $this->getHandler()->geocode($source);
+    }
+    return NULL;
   }
 
   /**
@@ -65,12 +74,12 @@ abstract class ProviderUsingHandlerBase extends ProviderBase {
   /**
    * Returns the provider handler.
    *
-   * @return \Geocoder\Provider\Provider
+   * @return \Geocoder\Provider\Provider|\Drupal\geocoder_geofield\Geocoder\Provider\GeometryProviderInterface
    *   The provider plugin.
    *
    * @throws \ReflectionException
    */
-  protected function getHandler(): Provider {
+  protected function getHandler() {
     if ($this->handler === NULL) {
       $definition = $this->getPluginDefinition();
       $reflection_class = new \ReflectionClass($definition['handler']);

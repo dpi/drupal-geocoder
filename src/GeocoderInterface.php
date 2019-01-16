@@ -17,10 +17,10 @@ interface GeocoderInterface {
    * @param \Drupal\geocoder\GeocoderProviderInterface[] $providers
    *   A list of Geocoder providers to use to perform the geocoding.
    *
-   * @return \Geocoder\Model\AddressCollection|null
+   * @return \Geocoder\Model\AddressCollection|\Geometry|null
    *   An address collection or NULL on geocoding failure.
    */
-  public function geocode(string $data, array $providers): ?AddressCollection;
+  public function geocode(string $data, array $providers);
 
   /**
    * Reverse geocodes coordinates.

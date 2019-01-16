@@ -16,8 +16,8 @@ interface ProviderInterface {
    * @param string $source
    *   The data to be geocoded.
    *
-   * @return \Geocoder\Model\AddressCollection|null
-   *   The address object or NULL.
+   * @return \Geocoder\Model\AddressCollection|\Geometry|null
+   *   The address collection, or the geometry, or NULL.
    */
   public function geocode($source);
 

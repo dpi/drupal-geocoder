@@ -9,7 +9,7 @@ use Drupal\geocoder\ProviderUsingHandlerBase;
  *
  * @GeocoderProvider(
  *   id = "gpxfile",
- *   name = "GPXFile",
+ *   name = "GPX File",
  *   handler = "\Drupal\geocoder_geofield\Geocoder\Provider\GPXFile"
  * )
  */
