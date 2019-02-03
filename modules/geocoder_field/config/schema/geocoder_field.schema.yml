@@ -33,9 +33,6 @@ field.field.*.*.*.third_party.geocoder_field:
     delta_handling:
       type: string
       label: 'Multi-value input handling'
-    only_insert:
-      type: string
-      label: 'On Source Insert Only Option'
     failure:
       type: mapping
       label: 'Geocoding failure settings'
