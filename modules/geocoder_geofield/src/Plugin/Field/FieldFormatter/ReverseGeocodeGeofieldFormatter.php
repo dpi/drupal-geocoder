@@ -3,7 +3,7 @@
 namespace Drupal\geocoder_geofield\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\geocoder_field\Plugin\Field\GeocodeFormatterBase;
+use Drupal\geocoder_field\Plugin\Field\FieldFormatter\GeocodeFormatter;
 use Geocoder\Model\AddressCollection;
 use Drupal\Component\Plugin\Exception\PluginException;
 
@@ -18,7 +18,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
  *   }
  * )
  */
-class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
+class ReverseGeocodeGeofieldFormatter extends GeocodeFormatter {
 
   /**
    * {@inheritdoc}
