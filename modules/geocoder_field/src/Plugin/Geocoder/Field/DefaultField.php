@@ -17,6 +17,7 @@ use Drupal\geocoder_field\Traits\ProvidersTableListTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a default generic geocoder field plugin.
@@ -166,11 +167,30 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    * {@inheritdoc}
    */
   public function getSettingsForm(FieldConfigInterface $field, array $form, FormStateInterface &$form_state) {
+
+    $geocoder_settings_link = $this->link->generate(t('Edit options in the Geocoder configuration page</span>'), Url::fromRoute('geocoder.settings', [], [
+      'query' => [
+        'destination' => Url::fromRoute('<current>')
+          ->toString(),
+      ],
+    ]));
+
     $element = [
       '#type' => 'details',
       '#title' => t('Geocode'),
       '#open' => TRUE,
     ];
+
+    if ($this->config->get('geocoder_presave_disabled')) {
+      $element['#description'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t("<b>The Geocoder and Reverse Geocoding operations are disabled, and won't be processed.</b> (@geocoder_settings_link)", [
+          '@geocoder_settings_link' => $geocoder_settings_link,
+        ]),
+      ];
+      $element['#open'] = FALSE;
+    }
 
     // Attach Geocoder Library.
     $element['#attached']['library'] = [

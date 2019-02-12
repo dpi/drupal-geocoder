@@ -74,6 +74,13 @@ class SettingsForm extends ConfigFormBase {
       'geocoder/general',
     ];
 
+    $form['geocoder_presave_disabled'] = [
+      '#type' => 'checkbox',
+      '#title' => $geocoder_config_schema['geocoder_presave_disabled']['label'],
+      '#description' => $geocoder_config_schema['geocoder_presave_disabled']['description'],
+      '#default_value' => $config->get('geocoder_presave_disabled'),
+    ];
+
     $form['cache'] = [
       '#type' => 'checkbox',
       '#title' => $geocoder_config_schema['cache']['label'],
@@ -96,8 +103,10 @@ class SettingsForm extends ConfigFormBase {
     // Get all the form state values, in an array structure.
     $form_state_values = $form_state->getValues();
 
-    $this->config('geocoder.settings')->set('cache', $form_state_values['cache']);
-    $this->config('geocoder.settings')->save();
+    $config = $this->config('geocoder.settings');
+    $config->set('geocoder_presave_disabled', $form_state_values['geocoder_presave_disabled']);
+    $config->set('cache', $form_state_values['cache']);
+    $config->save();
 
     parent::submitForm($form, $form_state);
   }
