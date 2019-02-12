@@ -187,7 +187,6 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
           '@geocoder_settings_link' => $geocoder_settings_link,
         ]),
       ];
-
       $element['#open'] = FALSE;
     }
 
