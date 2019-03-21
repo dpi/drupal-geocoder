@@ -124,6 +124,7 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
           'lat' => $coordinates->getLatitude(),
           'lon' => $coordinates->getLongitude(),
         ];
+        $cache = $origin;
       }
     }
     return $origin;
