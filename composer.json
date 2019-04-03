@@ -21,7 +21,7 @@
     "support": {
         "issues": "https://drupal.org/project/issues/geocoder",
         "irc": "irc://irc.freenode.org/drupal-geo",
-        "source": "https://cgit.drupalcode.org/geocoder"
+        "source": "https://git.drupalcode.org/project/geocoder"
     },
     "require": {
         "php": ">=7.1.0",
