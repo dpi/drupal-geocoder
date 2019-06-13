@@ -45,12 +45,12 @@ geocoder_provider.configuration.googlemaps:
       type: string
       nullable: true
       label: 'Google Geocoding API key (optional)'
-      description: '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key#standard-auth">Follow these steps to get an API key</a>'
+      description: '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key#standard-auth" target="blank">Follow these steps to get an API key</a>'
     region:
       type: string
       nullable: true
       label: 'Region code for region biasing (optional)'
-      description: 'See <a href="https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingRegionCodes">Region code biasing</a>'
+      description: 'See <a href="https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingRegionCodes" target="blank">Region code biasing</a>'
 
 geocoder_provider.configuration.googlemaps_business:
   type: geocoder_provider_configuration
@@ -59,27 +59,27 @@ geocoder_provider.configuration.googlemaps_business:
     clientId:
       type: string
       label: 'Client ID'
-      description: '<a href="https://developers.google.com/maps/documentation/geocoding/get-api-key#client-id">Authenticating your application using a client ID and digital signature</a>'
+      description: '<a href="https://developers.google.com/maps/documentation/geocoding/get-api-key#client-id" target="blank">Authenticating your application using a client ID and digital signature</a>'
     privateKey:
       type: string
       nullable: true
       label: 'Private key (optional)'
-      description: '<a href="https://developers.google.com/maps/documentation/geocoding/get-api-key#cryptographic_signing_keys">Getting a private cryptographic key</a>'
+      description: '<a href="https://developers.google.com/maps/documentation/geocoding/get-api-key#cryptographic_signing_keys" target="blank">Getting a private cryptographic key</a>'
     apiKey:
       type: string
       nullable: true
       label: 'Google Geocoding API key (optional)'
-      description: '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key#standard-auth">Follow these steps to get an API key</a>'
+      description: '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key#standard-auth" target="blank">Follow these steps to get an API key</a>'
     region:
       type: string
       nullable: true
       label: 'Region code for region biasing (optional)'
-      description: 'See <a href="https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingRegionCodes">Region code biasing</a>'
+      description: 'See <a href="https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingRegionCodes" target="blank">Region code biasing</a>'
     channel:
       type: string
       nullable: true
       label: 'Channel (optional)'
-      description: 'See <a href="https://developers.google.com/maps/premium/reports/usage-reports#channels">What are channels?</a>'
+      description: 'See <a href="https://developers.google.com/maps/premium/reports/usage-reports#channels" target="blank">What are channels?</a>'
 
 geocoder_provider.configuration.arcgisonline:
   type: geocoder_provider_configuration
@@ -97,7 +97,7 @@ geocoder_provider.configuration.bingmaps:
     apiKey:
       type: string
       label: 'API key'
-      description: '<a href="https://msdn.microsoft.com/en-us/library/ff428642.aspx">Getting a Bing Maps API key</a>'
+      description: '<a href="https://msdn.microsoft.com/en-us/library/ff428642.aspx" target="blank">Getting a Bing Maps API key</a>'
 
 geocoder_provider.configuration.geonames:
   type: geocoder_provider_configuration
@@ -106,7 +106,7 @@ geocoder_provider.configuration.geonames:
     username:
       type: string
       label: 'Username'
-      description: 'Create a free user account at <a href="http://www.geonames.org/login">www.geonames.org/login</a>'
+      description: 'Create a free user account at <a href="http://www.geonames.org/login" target="blank">www.geonames.org/login</a>'
 
 geocoder_provider.configuration.ipinfodb:
   type: geocoder_provider_configuration
@@ -115,7 +115,7 @@ geocoder_provider.configuration.ipinfodb:
     apiKey:
       type: string
       label: 'API key'
-      description: 'Get an API key by creating a free account at <a href="https://www.ipinfodb.com/register">www.ipinfodb.com/register</a>'
+      description: 'Get an API key by creating a free account at <a href="https://www.ipinfodb.com/register" target="blank">www.ipinfodb.com/register</a>'
     precision:
       type: string
       nullable: true
@@ -129,10 +129,10 @@ geocoder_provider.configuration.mapbox:
     accessToken:
       type: string
       label: 'Access Token'
-      description: '<a href="https://www.mapbox.com/signup/">Get your free API key</a>'
+      description: '<a href="https://www.mapbox.com/signup/" target="blank">Get your free API key</a>'
     country:
       type: string
-      label: 'Limit results to one or more countries. Permitted values are <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166 alpha 2</a> country codes separated by commas.'
+      label: 'Limit results to one or more countries. Permitted values are <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="blank">ISO 3166 alpha 2</a> country codes separated by commas.'
       nullable: true
 
 geocoder_provider.configuration.mapquest:
@@ -142,7 +142,7 @@ geocoder_provider.configuration.mapquest:
     apiKey:
       type: string
       label: 'API key'
-      description: '<a href="https://developer.mapquest.com/">Get your free API key</a>'
+      description: '<a href="https://developer.mapquest.com/" target="blank">Get your free API key</a>'
     licensed:
       type: boolean
       label: 'Licensed'
@@ -159,7 +159,7 @@ geocoder_provider.configuration.maxmind:
       type: string
       nullable: true
       label: 'MaxMind service (optional)'
-      description: 'Can be either "a", "b", "f" or "e". Defaults to "f". See <a href="https://dev.maxmind.com/geoip/legacy/web-services/#Per-Service_URIs">Services</a>'
+      description: 'Can be either "a", "b", "f" or "e". Defaults to "f". See <a href="https://dev.maxmind.com/geoip/legacy/web-services/#Per-Service_URIs" target="blank">Services</a>'
 
 geocoder_provider.configuration.nominatim:
   type: geocoder_provider_configuration
@@ -185,7 +185,7 @@ geocoder_provider.configuration.opencage:
     apiKey:
       type: string
       label: 'API key'
-      description: 'Sign up for a free API key at <a href="https://opencagedata.com/users/sign_up">opencagedata.com/users/sign_up</a>'
+      description: 'Sign up for a free API key at <a href="https://opencagedata.com/users/sign_up" target="blank">opencagedata.com/users/sign_up</a>'
 
 geocoder_provider.configuration.tomtom:
   type: geocoder_provider_configuration
@@ -194,7 +194,7 @@ geocoder_provider.configuration.tomtom:
     apiKey:
       type: string
       label: 'API key'
-      description: '<a href="https://developer.tomtom.com/apps/myapps">Request an evaluation API key</a>'
+      description: '<a href="https://developer.tomtom.com/apps/myapps" target="blank">Request an evaluation API key</a>'
 
 geocoder_provider.configuration.file:
   type: geocoder_provider_configuration
