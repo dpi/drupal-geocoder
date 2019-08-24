@@ -112,7 +112,7 @@ $settings['http_client_config']['proxy'];
 ## Geocode a string
 
 ```php
-$plugins = array('geonames', 'googlemaps', 'bingmaps');
+$plugins = ['geonames', 'googlemaps', 'bingmaps'];
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
 // Array of (ovverriding) options (@see Note* below)
@@ -134,7 +134,7 @@ Note*: The last $options array parameter is optional, and merges/overrides the d
 ## Reverse geocode coordinates
 
 ```php
-$plugins = array('freegeoip', 'geonames', 'googlemaps', 'bingmaps');
+$plugins = ['freegeoip', 'geonames', 'googlemaps', 'bingmaps'];
 $lat = '37.422782';
 $lon = '-122.085099';
 
@@ -161,7 +161,7 @@ which is itself composed of ```Geocoder\Model\Address```.
 You can transform those objects into arrays. Example:
 
 ```php
-$plugins = array('geonames', 'googlemaps', 'bingmaps');
+$plugins = ['geonames', 'googlemaps', 'bingmaps'];
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
 $addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
@@ -184,7 +184,7 @@ Get the list of available Dumper by doing:
 Here's an example on how to use a Dumper:
 
 ```php
-$plugins = array('geonames', 'googlemaps', 'bingmaps'); 
+$plugins = ['geonames', 'googlemaps', 'bingmaps']; 
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
 $addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
@@ -194,7 +194,7 @@ $geojson = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('g
 There's also a dumper for GeoPHP, here's how to use it:
 
 ```php
-$plugins = array('geonames', 'googlemaps', 'bingmaps');
+$plugins = ['geonames', 'googlemaps', 'bingmaps'];
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
 $addressCollection = \Drupal::service('geocoder')->geocode($address, $plugins);
