@@ -13,7 +13,6 @@ use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\ProviderPluginManager;
 use Drupal\geocoder_field\GeocoderFieldPluginInterface;
 use Drupal\geocoder_field\GeocoderFieldPluginManager;
-use Drupal\geocoder_field\Traits\ProvidersTableListTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -35,8 +34,6 @@ use Drupal\Core\Url;
  * )
  */
 class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, ContainerFactoryPluginInterface {
-
-  use ProvidersTableListTrait;
 
   /**
    * The config factory service.
@@ -307,7 +304,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     $enabled_providers = (array) $field->getThirdPartySetting('geocoder_field', 'providers');
 
     // Generates the Draggable Table of Selectable Geocoder Plugins.
-    $element['providers'] = $this->providersTableList($enabled_providers);
+    $element['providers'] = $this->providerPluginManager->providersPluginsTableList($enabled_providers);
     $element['providers']['#states'] = $invisible_state;
 
     $element['dumper'] = [

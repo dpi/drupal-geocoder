@@ -11,7 +11,7 @@ services:
   plugin.manager.geocoder.provider:
     class: Drupal\geocoder\ProviderPluginManager
     parent: default_plugin_manager
-    arguments: ['@config.factory', '@string_translation', '@renderer']
+    arguments: ['@string_translation', '@renderer', '@link_generator', '@entity_type.manager', '@messenger']
 
   plugin.manager.geocoder.dumper:
     class: Drupal\geocoder\DumperPluginManager

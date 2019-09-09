@@ -14,7 +14,6 @@ use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\Entity\GeocoderProvider;
 use Drupal\geocoder\GeocoderInterface;
 use Drupal\geocoder\ProviderPluginManager;
-use Drupal\geocoder_field\Traits\ProvidersTableListTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -26,8 +25,6 @@ use Drupal\Component\Plugin\Exception\PluginException;
  * Base Plugin implementation of the Geocode formatter.
  */
 abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFactoryPluginInterface {
-
-  use ProvidersTableListTrait;
 
   /**
    * The geocoder service.
@@ -203,7 +200,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     }
 
     // Generates the Draggable Table of Selectable Geocoder providers.
-    $element['providers'] = $this->providersTableList($enabled_providers);
+    $element['providers'] = $this->providerPluginManager->providersPluginsTableList($enabled_providers);
 
     // Set a validation for the providers selection.
     $element['providers']['#element_validate'] = [[get_class($this), 'validateProvidersSettingsForm']];
