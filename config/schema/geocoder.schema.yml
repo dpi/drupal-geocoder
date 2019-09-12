@@ -250,6 +250,15 @@ geocoder_provider.configuration.openstreetmap:
       label: 'Referer'
       description: 'Value of the Referer header'
 
+geocoder_provider.configuration.photon:
+  type: geocoder_provider_configuration
+  label: 'Photon arguments'
+  mapping:
+    rootUrl:
+      type: string
+      label: 'Root URL'
+      description: 'The URL representing the Photon API endpoint.'
+
 geocoder_provider.configuration.random:
   type: geocoder_provider_configuration
   label: 'Random arguments'
