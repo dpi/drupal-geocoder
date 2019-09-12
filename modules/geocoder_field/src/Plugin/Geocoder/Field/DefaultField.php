@@ -278,6 +278,15 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         ],
       ];
     }
+
+    $element['skip_not_empty_value'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('<b>Skip Geocode/Reverse Geocode</b> if target value is not empty'),
+      '#description' => $this->t('This allows to preserve existing value of the target field, and make the Geocoder/Reverse Geocoder work only for insert op'),
+      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'skip_not_empty_value', FALSE),
+      '#states' => $invisible_state,
+    ];
+
     $element['hidden'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('<strong>Hide</strong> this field in the Content Edit Form'),
