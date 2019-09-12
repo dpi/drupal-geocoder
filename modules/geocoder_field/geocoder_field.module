@@ -205,6 +205,12 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
     $failure_status_message = NULL;
     $providers = GeocoderProvider::loadMultiple($geocoder['providers']);
 
+    // Skip the Geocode/Reverse Geocode operation is so requested for not
+    // empty coordinates.
+    if (isset($geocoder['skip_not_empty_value']) && $geocoder['skip_not_empty_value'] && !$default_values->isEmpty()) {
+      return;
+    }
+
     foreach ($remote_field->getValue() as $delta => $value) {
       if ($remote_field->getFieldDefinition()->getType() === 'address_country') {
         $value['value'] = CountryManager::getStandardList()[$value['value']];
