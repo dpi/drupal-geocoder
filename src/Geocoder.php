@@ -46,7 +46,11 @@ class Geocoder implements GeocoderInterface {
     /** @var \Drupal\geocoder\GeocoderProviderInterface $provider */
     foreach ($providers as $provider) {
       try {
-        return $provider->getPlugin()->geocode($data);
+        $result = $provider->getPlugin()->geocode($data);
+        if (!isset($result) || $result->isEmpty()) {
+          throw new \Exception();
+        }
+        return $result;
       }
       catch (\Exception $e) {
         static::log($e->getMessage());
@@ -63,7 +67,11 @@ class Geocoder implements GeocoderInterface {
     /** @var \Drupal\geocoder\GeocoderProviderInterface $provider */
     foreach ($providers as $provider) {
       try {
-        return $provider->getPlugin()->reverse($latitude, $longitude);
+        $result = $provider->getPlugin()->reverse($latitude, $longitude);
+        if (!isset($result) || $result->isEmpty()) {
+          throw new \Exception();
+        }
+        return $result;
       }
       catch (\Exception $e) {
         static::log($e->getMessage());
