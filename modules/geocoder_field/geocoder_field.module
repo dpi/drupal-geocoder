@@ -95,15 +95,18 @@ function geocoder_field_field_config_edit_form_validate(array $form, FormStateIn
 
   // Clean-up and normalize the provider list.
   $trail = ['third_party_settings', 'geocoder_field', 'providers'];
-  $providers = array_keys(
-    array_filter(
-      $form_state->getValue($trail),
-      function ($item) {
-        return (bool) $item['checked'];
-      }
-    )
-  );
-  $form_state->setValue($trail, $providers);
+  $providers = $form_state->getValue($trail);
+  if ($providers) {
+    $selected_providers = array_keys(
+      array_filter(
+        $form_state->getValue($trail),
+        function ($item) {
+          return (bool) $item['checked'];
+        }
+      )
+    );
+    $form_state->setValue($trail, $selected_providers);
+  }
 
   // Give a chance to the geocoder field plugin to perform its own validation.
   $geocoder_data = (new FormState())->setValues($form_state->getValue(['third_party_settings', 'geocoder_field']));
