@@ -305,7 +305,9 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
 
     // Generates the Draggable Table of Selectable Geocoder Plugins.
     $element['providers'] = $this->providerPluginManager->providersPluginsTableList($enabled_providers);
-    $element['providers']['#states'] = $invisible_state;
+    if (isset($element['providers']['#type'])) {
+      $element['providers']['#states'] = $invisible_state;
+    }
 
     $element['dumper'] = [
       '#type' => 'select',
