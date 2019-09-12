@@ -205,8 +205,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
     $failure_status_message = NULL;
     $providers = GeocoderProvider::loadMultiple($geocoder['providers']);
 
-    // Skip the Geocode/Reverse Geocode operation is so requested for not
-    // empty coordinates.
+    // Skip Geocode/Reverse Geocode op is so requested for not empty value.
     if (isset($geocoder['skip_not_empty_value']) && $geocoder['skip_not_empty_value'] && !$default_values->isEmpty()) {
       return;
     }
