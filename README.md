@@ -34,14 +34,20 @@ This is a complete rewrite of the Geocoder module, based on the
 
 # Installation and setup
 * Download the module running the following shell command from your project root
-  (at the composer.json file level):
-  ```$ composer require drupal/geocoder```
+  (at the composer.json file level):  
+  
+  ```$ composer require drupal/geocoder:^3.0@beta```  
+  
 * Choose the [Geocoder Provider](https://packagist.org/providers/geocoder-php/provider-implementation)
   you want to use and also add it as a required dependency to your project. For
-  example if you want to use Google Maps as your provider:
-  ```$ composer require geocoder-php/google-maps-provider```
-* Enable the module via [Drush](http://drush.org)
- ```$ drush en geocoder```
+  example if you want to use Google Maps as your provider:  
+  
+  ```$ composer require geocoder-php/google-maps-provider```  
+  
+* Enable the module via [Drush](http://drush.org)  
+
+ ```$ drush en geocoder```  
+ 
  or the website back-end/administration interface;
 * Eventually enable the submodules: ```geocoder_field``` and
   ```geocoder_geofield``` / ```geocoder_address```.
@@ -297,6 +303,42 @@ wrong configurations causes.
 1. Install Geocoder version 3.x.
 2. Run the database updates, either by visiting `update.php` or running the
    `drush updb` command.
+   
+More specifically, when upgrading to the new Geocoder 8.x-3.x branch you would 
+need to remove the Geocoder 8.x-2.x branch before, and make sure also its 
+dependency willdurand/geocoder": "^3.0" library is removed.
+
+So you would better run the following commands/operations:
+
+Disable the Geocoder module (from the backend or with Drush with the following 
+command):
+drush pmu geocoder</code>
+
+Remove the Geocoder 8.x-2.x version:  
+
+````composer remove drupal/geocoder````
+
+(Optional) better make sure also its dependency willdurand/geocoder": "^3.0" 
+library is removed:  
+
+````composer remove willdurand/geocoder````
+
+Install the Geocoder 8.x-3.x version:  
+
+````composer require drupal/geocoder:^3.0@beta````
+(this will install also the dependency willdurand/geocoder": "^4.0" library)
+
+Enable the Geocoder 8.x-3.x version:  
+
+````drush en geocoder````
+ 
+Choose the [Geocoder Provider](https://packagist.org/providers/geocoder-php/provider-implementation)
+you want to use and also add it as a required dependency to your project. For
+example if you want to use Google Maps as your provider:  
+
+```$ composer require geocoder-php/google-maps-provider```  
+(you will find that as a possible geocoder provider choice in the "add provider"
+options of the Geocoder module settings page ('/admin/config/system/geocoder').
 
 ## Developers
 
