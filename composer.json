@@ -50,6 +50,7 @@
         "geocoder-php/maxmind-provider": "^4.1",
         "geocoder-php/nominatim-provider": "^5.0",
         "geocoder-php/open-cage-provider": "^4.0",
+        "geocoder-php/pelias-provider": "^1.0",
         "geocoder-php/photon-provider": "^0.1.0",
         "geocoder-php/tomtom-provider": "^4.0",
         "geocoder-php/yandex-provider": "^4.0"
