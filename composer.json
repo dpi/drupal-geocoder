@@ -27,7 +27,8 @@
         "php": ">=7.1.0",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message": "^1.6",
-        "willdurand/geocoder": "^4.0"
+        "willdurand/geocoder": "^4.0",
+        "davedevelopment/stiphle": "^0.9.2"
     },
     "require-dev": {
         "phpro/grumphp": "^0.12.1",

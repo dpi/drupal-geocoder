@@ -36,6 +36,24 @@ geocoder_provider.configuration.*:
 geocoder_provider_configuration:
   type: mapping
   label: 'Default Geocoder provider configuration'
+  mapping:
+    throttle:
+      type: geocoder_throttle_configuration
+      label: 'Throttle'
+      nullable: true
+
+geocoder_throttle_configuration:
+  type: mapping
+  label: "Geocoder throttle configuration"
+  mapping:
+    period:
+      type: integer
+      label: "Period"
+      description: "Period of time for which the number of requests is limited, in seconds"
+    limit:
+      type: integer
+      label: "Limit"
+      description: "Maximum number of requests allowed for the given period"
 
 geocoder_provider.configuration.googlemaps:
   type: geocoder_provider_configuration
