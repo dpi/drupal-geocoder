@@ -10,13 +10,15 @@ interface GeocoderThrottleInterface {
   /**
    * Sleeps until the throttle rate is not reached anymore.
    *
-   * @param string $key An identifier for the service where we send the requests.
-   * @param array|null $throttle_info An associative array with:
-   * - period: in seconds
-   * - limit: number of requests allowed in the period
-   * or null not to limit the requests.
+   * @param string $key
+   *   An identifier for the service where we send the requests.
+   * @param array|null $throttle_info
+   *   An associative array with:
+   *   - period: in seconds
+   *   - limit: number of requests allowed in the period
+   *   or null not to limit the requests.
    *
-   * @return null
+   * @return void|NULL
    */
   public function waitForAvailability(string $key, array $throttle_info);
 
