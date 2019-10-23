@@ -230,7 +230,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
         default:
       }
 
-      if (isset($dumper) && $geo_collection && !$geo_collection->isEmpty()) {
+      if (isset($dumper) && isset($geo_collection) && !$geo_collection->isEmpty()) {
 
         // Normally each geocode/reverse op would return an AddressCollection.
         if ($geo_collection instanceof AddressCollection) {
