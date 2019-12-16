@@ -8,6 +8,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\geofield\Plugin\GeofieldProximitySource\ManualOriginDefault;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\geocoder\ProviderPluginManager;
+use Drupal\geocoder\FormatterPluginManager;
 
 /**
  * Defines 'Geocode Origin' proximity source plugin.
@@ -71,6 +72,20 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
   protected $providerPluginManager;
 
   /**
+   * The Formatter Plugin Manager.
+   *
+   * @var \Drupal\geocoder\FormatterPluginManager
+   */
+  protected $formatterPluginManager;
+
+  /**
+   * The Address Format for autocomplete suggestions.
+   *
+   * @var array
+   */
+  protected $addressFormat;
+
+  /**
    * Constructs a GeocodeOrigin object.
    *
    * @param array $configuration
@@ -81,14 +96,18 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
    *   The plugin implementation definition.
    * @param \Drupal\geocoder\ProviderPluginManager $providerPluginManager
    *   The Providers Plugin Manager.
+   * @param \Drupal\geocoder\FormatterPluginManager $formatterPluginManager
+   *   The Providers Plugin Manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ProviderPluginManager $providerPluginManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ProviderPluginManager $providerPluginManager, FormatterPluginManager $formatterPluginManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->originAddress = isset($configuration['origin_address']) ? $configuration['origin_address'] : '';
     $this->providerPluginManager = $providerPluginManager;
+    $this->formatterPluginManager = $formatterPluginManager;
+    $this->originAddress = isset($configuration['origin_address']) ? $configuration['origin_address'] : '';
     $this->minTerms = isset($configuration['settings']['min_terms']) ? $configuration['settings']['min_terms'] : 4;
     $this->delay = isset($configuration['settings']['delay']) ? $configuration['settings']['delay'] : 800;
     $this->options = isset($configuration['settings']['options']) ? $configuration['settings']['options'] : '';
+    $this->addressFormat = isset($configuration['address_format']) ? $configuration['address_format'] : 'default_formatted_address';
   }
 
   /**
@@ -99,7 +118,8 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('plugin.manager.geocoder.provider')
+      $container->get('plugin.manager.geocoder.provider'),
+      $container->get('plugin.manager.geocoder.formatter')
     );
   }
 
@@ -189,6 +209,17 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
         '#placeholder' => '{"googlemaps":{"locale": "it", "region": "it"}, "nominatim":{"locale": "it"}}',
         '#element_validate' => [[get_class($this), 'jsonValidate']],
       ];
+
+      $form['address_format'] = [
+        '#title' => t('Address Format'),
+        '#type' => 'select',
+        '#options' => $this->formatterPluginManager->getPluginsAsOptions(),
+        '#description' => t('The address formatter plugin, used for autocomplete suggestions'),
+        '#default_value' => $this->addressFormat,
+        '#attributes' => [
+          'class' => ['address-format'],
+        ],
+      ];
     }
     else {
       $form['#attributes']['class'][] = 'origin-address-autocomplete';
@@ -211,6 +242,7 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
           'minTerms' => $this->minTerms,
           'delay' => $this->delay,
           'options' => $this->options,
+          'address_format' => $this->addressFormat,
         ],
       ];
     }
@@ -272,3 +304,4 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
   }
 
 }
+
