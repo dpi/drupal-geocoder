@@ -143,6 +143,8 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
     ];
 
     if (!$is_exposed) {
+      $form['origin_address']['#title'] = t('Default Origin');
+      $form['origin_address']['#description'] = t('Address, City, Zip-Code, Country that would be set as Default Geocoded Address in the Exposed Filter');
 
       // Attach Geofield Map Library.
       $form['#attached']['library'] = [
