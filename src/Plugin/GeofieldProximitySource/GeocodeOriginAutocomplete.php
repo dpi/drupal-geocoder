@@ -11,7 +11,7 @@ use Drupal\geocoder\ProviderPluginManager;
 use Drupal\geocoder\FormatterPluginManager;
 
 /**
- * Defines 'Geocode Origin' proximity source plugin.
+ * Defines 'Geocode Origin, with Autocomplete' proximity source plugin.
  *
  * @GeofieldProximitySource(
  *   id = "geofield_geocode_origin_autocomplete",
@@ -107,7 +107,7 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
     $this->minTerms = isset($configuration['settings']['min_terms']) ? $configuration['settings']['min_terms'] : 4;
     $this->delay = isset($configuration['settings']['delay']) ? $configuration['settings']['delay'] : 800;
     $this->options = isset($configuration['settings']['options']) ? $configuration['settings']['options'] : '';
-    $this->addressFormat = isset($configuration['address_format']) ? $configuration['address_format'] : 'default_formatted_address';
+    $this->addressFormat = isset($configuration['settings']['address_format']) ? $configuration['settings']['address_format'] : 'default_formatted_address';
   }
 
   /**
@@ -210,7 +210,7 @@ class GeocodeOriginAutocomplete extends ManualOriginDefault implements Container
         '#element_validate' => [[get_class($this), 'jsonValidate']],
       ];
 
-      $form['address_format'] = [
+      $form['settings']['address_format'] = [
         '#title' => t('Address Format'),
         '#type' => 'select',
         '#options' => $this->formatterPluginManager->getPluginsAsOptions(),
