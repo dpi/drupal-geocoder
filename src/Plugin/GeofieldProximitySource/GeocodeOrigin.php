@@ -232,7 +232,7 @@ class GeocodeOrigin extends GeofieldProximitySourceBase implements ContainerFact
         '#type' => 'checkbox',
         '#title' => $this->t("Enable Autocomplete"),
         '#default_value' => $this->useAutocomplete,
-        '#description' => $this->t('Check this to activate the Autocomplete Geocoding in the Address Search Input Origin.</br>Note: This will increase/double the Quota of Geocoding operations requested to the selected Geocoder Provider (requests related to teh Autocomplete phase and a final one once the Exposed filter is Submitted'),
+        '#description' => $this->t('Check this to activate the Autocomplete Geocoding in the Address Origin Input.</br>Note: This will increase/double the Quota of Geocoding operations requested to the selected Geocoder Providers<br>(requests related to the Autocomplete phase plus the ones related to the Exposed Filter Submission)'),
         '#states' => [
           'invisible' => [':input[name="options[expose_button][checkbox][checkbox]"]' => ['checked' => FALSE]],
         ],
