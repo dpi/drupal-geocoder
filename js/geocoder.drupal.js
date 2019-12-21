@@ -30,15 +30,6 @@
         });
       }
 
-      var latitudeInput, longitudeInput, latitudeSpan, longitudeSpan = '';
-
-      $('.origin-address-autocomplete', context).once('autocomplete-enabled').each(function () {
-        latitudeInput = $(this).find('.geofield-lat').first();
-        longitudeInput = $(this).find('.geofield-lon').first();
-        latitudeSpan = $(this).find('.geofield-lat-summary').first();
-        longitudeSpan = $(this).find('.geofield-lon-summary').first();
-      });
-
       // Run filters on page load if state is saved by browser.
       $('.origin-address-autocomplete .address-input', context).once('autocomplete-enabled').each(function () {
         var providers = settings.geocode_origin_autocomplete.providers.toString();
@@ -58,8 +49,6 @@
                   return {
                     // the value property is needed to be passed to the select.
                     value: item.formatted_address,
-                    lat: item.geometry.location.lat,
-                    lng: item.geometry.location.lng
                   };
                 }));
               },
@@ -69,35 +58,10 @@
                   return false;
                 });
               }));
-          },
-          // This bit is executed upon selection of an address.
-          select: function (event, ui) {
-            latitudeInput.val(ui.item.lat);
-            longitudeInput.val(ui.item.lng);
-            latitudeSpan.text(ui.item.lat);
-            longitudeSpan.text(ui.item.lng);
           }
         });
-
-        // Geocode and Fill the Lat / Lng parameters in case of default geocode
-        // address.
-        if($(this).val().length && latitudeInput.val().length === 0 && longitudeInput.val().length === 0) {
-          $.when(geocode($(this).val(), providers).then(
-            // On Resolve/Success.
-            function (results) {
-              latitudeInput.val(results[0].geometry.location.lat);
-              longitudeInput.val(results[0].geometry.location.lng);
-              latitudeSpan.text(results[0].geometry.location.lat);
-              longitudeSpan.text(results[0].geometry.location.lng);
-            },
-            // On Reject/Error.
-            function() {
-              return false;
-            }));
-        }
       });
     }
   };
 
 })(jQuery, Drupal, drupalSettings);
-
