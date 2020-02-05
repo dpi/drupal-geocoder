@@ -31,14 +31,16 @@ abstract class PreprocessorBase extends PluginBase implements PreprocessorInterf
    * PreprocessorBase constructor.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
-   * @param CountryManager $country_manager
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Locale\CountryManager $country_manager
+   *   The Country Manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition,
-                              CountryManager $country_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CountryManager $country_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
     $this->countryManager = $country_manager;
   }
 
