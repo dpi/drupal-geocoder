@@ -67,14 +67,6 @@ abstract class PreprocessorBase extends PluginBase implements PreprocessorInterf
   /**
    * {@inheritdoc}
    */
-  public function prepareValues(array &$values) {
-    $values = $this->setValues($values)->getValues();
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function preprocess() {
     if (!isset($this->field)) {
       throw new \RuntimeException('A field (\Drupal\Core\Field\FieldItemListInterface) must be set with ::setField() before preprocessing.');
