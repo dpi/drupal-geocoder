@@ -30,7 +30,7 @@ class File extends PreprocessorBase {
   protected $fileSystem;
 
   /**
-   * PreprocessorBase constructor.
+   * Constructs a geocoder file field preprocessor constructor.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
