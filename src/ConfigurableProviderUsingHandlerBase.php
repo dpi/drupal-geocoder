@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\geocoder;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -17,7 +17,7 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 /**
  * Provides a base class for configurable providers using handlers.
  */
-abstract class ConfigurableProviderUsingHandlerBase extends ProviderUsingHandlerBase implements ConfigurablePluginInterface, PluginFormInterface {
+abstract class ConfigurableProviderUsingHandlerBase extends ProviderUsingHandlerBase implements ConfigurableInterface, PluginFormInterface {
 
   use ConfigurableProviderTrait;
 
