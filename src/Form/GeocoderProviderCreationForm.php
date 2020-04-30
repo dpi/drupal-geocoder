@@ -6,8 +6,8 @@ namespace Drupal\geocoder\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\geocoder\ProviderPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,13 +27,23 @@ class GeocoderProviderCreationForm extends FormBase {
   protected $pluginManager;
 
   /**
+   * The Link generator Service.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $link;
+
+  /**
    * Constructs a new GeocoderProviderCreationForm.
    *
    * @param \Drupal\geocoder\ProviderPluginManager $plugin_manager
    *   The geocoder provider plugin manager.
+   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
+   *   The Link Generator service.
    */
-  public function __construct(ProviderPluginManager $plugin_manager) {
+  public function __construct(ProviderPluginManager $plugin_manager, LinkGeneratorInterface $link_generator) {
     $this->pluginManager = $plugin_manager;
+    $this->link = $link_generator;
   }
 
   /**
@@ -41,7 +51,8 @@ class GeocoderProviderCreationForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.geocoder.provider')
+      $container->get('plugin.manager.geocoder.provider'),
+      $container->get('link_generator')
     );
   }
 
@@ -58,10 +69,9 @@ class GeocoderProviderCreationForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $providers = [];
     foreach ($this->pluginManager->getDefinitions() as $id => $definition) {
-      // @todo All provider plugins should implement this probably.
-      // if (is_subclass_of($definition['class'], '\Drupal\Core\Plugin\PluginFormInterface')) {
+      if (in_array('Drupal\Core\Plugin\PluginFormInterface', class_implements($definition['class']))) {
         $providers[$id] = $definition['name'];
-      // }
+      }
     }
     asort($providers);
 
@@ -90,7 +100,7 @@ class GeocoderProviderCreationForm extends FormBase {
       '#value' => $this->t('Add'),
     ];
 
-    $providers = $this->getLinkGenerator()->generate(t('list of all available Geocoder providers'), Url::fromUri('https://packagist.org/providers/geocoder-php/provider-implementation', [
+    $providers = $this->link->generate(t('list of all available Geocoder providers'), Url::fromUri('https://packagist.org/providers/geocoder-php/provider-implementation', [
       'absolute' => TRUE,
       'attributes' => ['target' => 'blank'],
     ]));
