@@ -33,7 +33,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
   /**
    * The address service.
    *
-   * @var Drupal\geocoder_address\AddressService
+   * @var \Drupal\geocoder_address\AddressService
    */
   protected $addressService;
 
@@ -68,7 +68,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
    *   The logger factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param Drupal\geocoder_address\AddressService $address_service
+   * @param \Drupal\geocoder_address\AddressService $address_service
    *   The Geocoder Address service.
    */
   public function __construct(
