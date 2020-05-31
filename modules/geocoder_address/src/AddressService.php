@@ -6,7 +6,6 @@ use Drupal\Core\DependencyInjection\ServiceProviderBase;
 use CommerceGuys\Addressing\AddressFormat\AddressFormatRepositoryInterface;
 use CommerceGuys\Addressing\Country\CountryRepositoryInterface;
 use CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\address\Element\Address as ElementAddress;
 use CommerceGuys\Addressing\Address as AddressingAddress;
 use CommerceGuys\Addressing\Formatter\DefaultFormatter;
@@ -68,7 +67,7 @@ class AddressService extends ServiceProviderBase {
    * @param string $countrycode
    *   The country code.
    * @param string $formatter
-   *   The type of formatter to return, 'postal' or 'default';
+   *   The type of formatter to return, 'postal' or 'default'.
    *
    * @return mixed
    *   - 'postal': \CommerceGuys\Addressing\Formatter\PostalLabelFormatter
