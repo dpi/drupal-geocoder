@@ -4,20 +4,14 @@ namespace Drupal\geocoder;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Ivory\HttpAdapter\HttpAdapterInterface;
+use GuzzleHttp\ClientInterface;
+use Http\Adapter\Guzzle6\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for providers using handlers with HTTP adapter.
  */
 abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerBase {
-
-  /**
-   * The HTTP adapter.
-   *
-   * @var \Ivory\HttpAdapter\HttpAdapterInterface
-   */
-  protected $httpAdapter;
 
   /**
    * Constructs a geocoder provider plugin object.
@@ -32,15 +26,22 @@ abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerB
    *   The config factory service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend used to cache geocoding data.
-   * @param \Ivory\HttpAdapter\HttpAdapterInterface $http_adapter
-   *   The HTTP adapter.
+   * @param \GuzzleHttp\ClientInterface $httpClient
+   *   The HTTP client.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend, HttpAdapterInterface $http_adapter) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend, ClientInterface $httpClient) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend);
-    $this->httpAdapter = $http_adapter;
+    $this->httpAdapter = new Client($httpClient);
   }
+
+  /**
+   * The HTTP adapter.
+   *
+   * @var \Http\Client\HttpClient
+   */
+  protected $httpAdapter;
 
   /**
    * {@inheritdoc}
@@ -54,7 +55,7 @@ abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerB
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('cache.geocoder'),
-      $container->get('geocoder.http_adapter')
+      $container->get('http_client')
     );
   }
 
