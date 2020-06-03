@@ -4,8 +4,7 @@ namespace Drupal\geocoder;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use GuzzleHttp\ClientInterface;
-use Http\Adapter\Guzzle6\Client;
+use Http\Client\HttpClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,14 +25,14 @@ abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerB
    *   The config factory service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend used to cache geocoding data.
-   * @param \GuzzleHttp\ClientInterface $httpClient
-   *   The HTTP client.
+   * @param \Http\Client\HttpClient $http_adapter
+   *   The HTTP adapter.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend, ClientInterface $httpClient) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend, HttpClient $http_adapter) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $config_factory, $cache_backend);
-    $this->httpAdapter = new Client($httpClient);
+    $this->httpAdapter = $http_adapter;
   }
 
   /**
@@ -55,7 +54,7 @@ abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerB
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('cache.geocoder'),
-      $container->get('http_client')
+      $container->get('geocoder.http_adapter')
     );
   }
 
